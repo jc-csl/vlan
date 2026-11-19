@@ -16,3 +16,12 @@ Contenido:
 8. Comandos Cisco (switch y router) copiables
 9. DTP y VTP
 10. Resumen y buenas prácticas
+11. Laboratorio interactivo
+
+## Laboratorio interactivo
+
+Abre `laboratorio.html` (un único archivo, sin dependencias): red con 2 switches y un router, terminal IOS simulada, inspector de puertos, editor de bits de la etiqueta 802.1Q, panel DTP y 11 misiones con corrección automática (incluye un reto de red averiada).
+
+## Versión laboratorio
+
+Abre `vlan-lab.html`: animación del broadcast sin/con VLAN y 7 laboratorios interactivos (broadcast, troncal y VLAN nativa, trama 802.1Q bit a bit, DTP, router-on-a-stick, terminal IOS simulada con misiones, VTP), trampas de examen, chuleta y test. Un solo archivo, sin dependencias.

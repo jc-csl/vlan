@@ -11,21 +11,33 @@ SCENES.concept = {
     {
       t: 'Punto de partida: sin VLAN',
       h: 'Un router, <b>un cable</b>, un switch de 48 puertos y 9 PCs. Sin VLAN todos los puertos están en la <b>VLAN 1</b>: <b>una sola red</b> (192.168.1.0/24) y <b>un solo dominio de broadcast</b>. Todo el mundo ve a todo el mundo.',
-      async run(c, A) { }
+      async run(c, A) { c.clear(); }
+    },
+    {
+      t: 'SIN VLAN: el broadcast de PC1 llega a todos',
+      h: 'PC1 lanza un <b>broadcast</b> (p. ej. un ARP a <code>FF:FF:FF:FF:FF:FF</code>). El switch lo <b>inunda por todos los puertos</b>: lo reciben los <b>otros 8 PCs</b> y también el <b>router</b>, aunque no sea para ellos. Todo el switch es <b>un único dominio de broadcast</b>.',
+      async run(c, A) { await c.bcast(false, A); }
     },
     {
       t: 'Creamos 3 VLAN y repartimos los puertos',
       h: 'Dividimos el switch en 3 "módulos" de 16 puertos y asignamos cada uno a una VLAN:<br><code>vlan 10</code> · <code>interface range f0/1-16</code> · <code>switchport access vlan 10</code> (y lo mismo con 20 y 30).<br>Físicamente sigue siendo <b>un único switch</b>; es la configuración la que "pinta" los puertos.',
       async run(c, A) {
+        c.clear();
         c.st.col = 1;
         c.paint();
         await A.sleep(700);
       }
     },
     {
+      t: 'CON VLAN: el mismo broadcast de PC1 solo afecta a su red',
+      h: 'PC1 repite <b>exactamente el mismo broadcast</b>. Ahora el switch solo lo reenvía por los puertos de la <b>VLAN 10</b>: lo reciben <b>PC2 y PC3</b>. En los puertos de las VLAN 20 y 30 se <b>filtra</b>. Al router llega por el troncal con la etiqueta VLAN 10 (a <code>g0/0.10</code>) y <b>no lo reenvía</b> a otras VLAN. El broadcast queda confinado en su <b>red local</b>.',
+      async run(c, A) { await c.bcast(true, A); }
+    },
+    {
       t: 'Un switch físico → 3 switches lógicos',
       h: 'Cada VLAN se comporta como <b>un switch independiente</b>: sus puertos no se ven con los de las otras VLAN, ni siquiera comparten broadcast. Es como si hubieras comprado 3 switches de 16 puertos… pero pagando solo uno.',
       async run(c, A) {
+        c.clear();
         await A.tween(0, 1, 1400, v => { c.st.tSw = v; c.render(); });
       }
     },
@@ -153,8 +165,51 @@ SCENES.concept = {
         pills[i].setAttribute('transform', `translate(${cx(i)},0)`);
         pills[i].style.opacity = ip;
       });
-      single.style.opacity = (1 - Math.min(1, tSw * 3)) * (1 - ip);
+      single.style.opacity = (1 - Math.min(1, tSw * 3)) * (1 - ip) * (st.col ? 0 : 1);
       pcs.forEach(({ p }) => { p.ipT.style.opacity = ip; });
+    }
+
+    // anotaciones del broadcast (marcas, contador) que se limpian en cada paso
+    const marks = [];
+    const result = S('text', { x: 850, y: 60, class: 't halo', 'text-anchor': 'middle' }, gLb, '');
+    const result2 = S('text', { x: 850, y: 80, class: 't tm xs halo', 'text-anchor': 'middle' }, gLb, '');
+    function clear() {
+      marks.splice(0).forEach(m => m.remove());
+      pcs.forEach(({ p }) => { p.halo.style.opacity = 0; });
+      result.textContent = ''; result2.textContent = '';
+    }
+    async function bcast(vlan, A) {
+      clear();
+      const col = vlan ? VL[0].c : COL.v1, SY = 384, src = 0;
+      const sx = pcs[src].p.g.transform.baseVal[0].matrix.e;
+      const px = k => pcs[k].p.g.transform.baseVal[0].matrix.e;
+      const up = packet(svg, col);
+      await A.move(up.g, [[sx, 440], [sx, SY]], 500);
+      up.remove();
+      let got = 0;
+      const jobs = pcs.map(({ p, i }, k) => (async () => {
+        if (k === src) return;
+        const same = !vlan || i === 0;
+        const pk = packet(svg, col);
+        await A.move(pk.g, same ? [[sx, SY], [px(k), SY], [px(k), 440]] : [[sx, SY], [px(k), SY], [px(k), 412]], 900);
+        pk.remove();
+        if (same) { got++; p.halo.style.stroke = COL.ok; p.halo.style.opacity = 1; }
+        else {
+          marks.push(S('text', { x: px(k), y: 416, class: 'xmark', 'text-anchor': 'middle' }, svg, '✕'));
+        }
+      })());
+      jobs.push((async () => {
+        const pk = packet(svg, col);
+        await A.move(pk.g, [[sx, SY], [500, SY], [500, 300], [500, 130]], 1500);
+        if (vlan) await pk.tag(A, 10, VL[0].c);
+        await A.sleep(vlan ? 500 : 0);
+        pk.remove();
+        marks.push(S('rect', { x: 330, y: 20, width: 340, height: 100, rx: 10, fill: 'none', stroke: vlan ? COL.v10 : COL.bad, 'stroke-width': 3 }, svg));
+      })());
+      await Promise.all(jobs);
+      result.textContent = vlan ? `Reciben: ${got} PCs de su VLAN` : `Reciben: ${got} PCs + el router`;
+      result.style.fill = vlan ? COL.ok : COL.bad;
+      result2.textContent = vlan ? 'Los otros 6 PCs no se enteran' : 'Todos procesan un mensaje ajeno';
     }
     function paint() {
       mods.forEach((m, i) => {
@@ -162,9 +217,10 @@ SCENES.concept = {
         m.lbl.style.opacity = 1;
       });
       pcs.forEach(({ p, i }) => p.color(VL[i].c));
+      render();
     }
     render();
-    return { st, render, paint };
+    return { st, render, paint, clear, bcast };
   }
 };
 
