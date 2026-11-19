@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VLAN · Apuntes visuales CCNA</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hero">
+  <h1>VLAN · Apuntes visuales</h1>
+  <p>Cómo <b>un switch</b> se convierte en varios y <b>un cable</b> en varios, qué hace la <b>etiqueta 802.1Q</b>, qué es la <b>VLAN nativa</b> y los <b>comandos Cisco</b> para configurarlo todo. Cada animación se avanza paso a paso con <i>Siguiente ▶</i>.</p>
+</header>
+<nav>
+  <a href="#que">1 · Qué es</a>
+  <a href="#desdoble">2 · 1 cable → 3 VLAN</a>
+  <a href="#broadcast">3 · Broadcast</a>
+  <a href="#etiquetado">4 · Etiquetado</a>
+  <a href="#trama">5 · Trama 802.1Q</a>
+  <a href="#troncal">6 · Troncal y nativa</a>
+  <a href="#router">7 · Entre VLAN</a>
+  <a href="#comandos">8 · Comandos</a>
+  <a href="#extras">9 · DTP y VTP</a>
+  <a href="#resumen">10 · Resumen</a>
+</nav>
+<main>
+
+<section id="que">
+  <h2>1 · ¿Qué es una VLAN?</h2>
+  <p class="lead">Una <b>VLAN</b> (Virtual LAN) permite <b>dividir un switch físico en varios switches lógicos</b> independientes. Los dispositivos de una VLAN solo se ven entre sí; para comunicarse con otra VLAN hace falta un dispositivo de <b>capa 3</b> (router o switch multicapa).</p>
+  <div class="eq">
+    <span class="pill">1 VLAN</span><span class="s">=</span><span class="pill">1 switch virtual</span><span class="s">=</span><span class="pill">1 dominio de broadcast</span><span class="s">=</span><span class="pill">1 red IP (subred)</span><span class="s">=</span><span class="pill">1 subinterfaz de router (gateway)</span>
+  </div>
+  <h3>Beneficios</h3>
+  <div class="cards">
+    <div class="card"><h4>📉 Broadcasts más pequeños</h4>Hay <b>más</b> dominios de difusión, pero cada uno <b>más pequeño</b>: el broadcast se queda en su VLAN.</div>
+    <div class="card"><h4>🔒 Más seguridad</h4>El tráfico de una VLAN queda aislado del resto; entre VLAN solo se pasa por el router (donde se pueden aplicar ACL).</div>
+    <div class="card"><h4>🗂 Organización</h4>Se agrupan equipos por función (ventas, administración, invitados…), no por su situación física.</div>
+    <div class="card"><h4>💶 Menos hardware</h4>Un solo switch sirve a varias redes: no hace falta uno por cada grupo.</div>
+    <div class="card"><h4>⚙ Administración más simple</h4>Los grupos con necesidades parecidas comparten políticas y servicios.</div>
+  </div>
+  <h3>Tipos de VLAN</h3>
+  <table>
+    <tr><th>Tipo</th><th>Para qué sirve</th></tr>
+    <tr><td><b>VLAN 1 (predeterminada)</b></td><td>Es la VLAN por defecto de todos los puertos, la nativa y la de gestión. No se puede borrar ni renombrar. <b>Buena práctica:</b> no usarla para usuarios y mover la nativa y la gestión a otras VLAN.</td></tr>
+    <tr><td><b>VLAN de datos</b></td><td>Tráfico de usuarios (web, correo…): VLAN 10, 20, 30 de estos apuntes.</td></tr>
+    <tr><td><b>VLAN nativa</b></td><td>Solo en troncales: sus tramas viajan <b>sin etiqueta</b>. Por defecto la 1; mejor una dedicada (p. ej. 99).</td></tr>
+    <tr><td><b>VLAN de gestión</b></td><td>Para acceder por SSH/Telnet al switch (la VLAN de su SVI). No mezclar con tráfico de usuario.</td></tr>
+    <tr><td><b>VLAN de voz</b></td><td>Para telefonía IP: requiere ancho de banda garantizado, prioridad QoS y retardo &lt; 150 ms. Comando <code>switchport voice vlan N</code>.</td></tr>
+  </table>
+</section>
+
+<section id="desdoble">
+  <h2>2 · Un cable, un switch… tres VLAN</h2>
+  <p class="lead">La idea central: <b>físicamente</b> hay 1 interfaz de router (g0/0), 1 cable y 1 switch de 48 puertos. <b>Lógicamente</b> hay 3 subinterfaces, 3 "cables" y 3 switches de 16 puertos, cada uno con su red IP.</p>
+  <div data-scene="concept"></div>
+  <div class="box info"><b>Para recordar:</b> el desdoblamiento solo existe en la <i>configuración</i>. El cable único que lleva las 3 VLAN se llama <b>troncal</b> y funciona porque cada trama lleva una <b>etiqueta</b> (sección 4 y 5).</div>
+</section>
+
+<section id="broadcast">
+  <h2>3 · Por qué se hace: el dominio de broadcast</h2>
+  <p class="lead">Sin VLAN, un broadcast llega a todos los equipos del switch. Con VLAN solo llega a los de su VLAN, y entre VLAN el switch <b>no reenvía</b> nada.</p>
+  <div data-scene="broadcast"></div>
+</section>
+
+<section id="etiquetado">
+  <h2>4 · Etiquetado: puerto ACCESS ↔ TRONCAL</h2>
+  <p class="lead">Los PCs no entienden de VLAN. El <b>switch</b> añade la etiqueta cuando la trama entra por un puerto access y va a salir por un troncal, y la <b>quita</b> al salir por un puerto access.</p>
+  <div data-scene="tagging"></div>
+  <table>
+    <tr><th></th><th>Puerto ACCESS</th><th>Puerto TRUNK</th></tr>
+    <tr><td><b>VLAN</b></td><td>Una sola</td><td>Muchas (por defecto todas)</td></tr>
+    <tr><td><b>Etiqueta 802.1Q</b></td><td>No (trama normal)</td><td>Sí, salvo la VLAN nativa</td></tr>
+    <tr><td><b>Se conecta a</b></td><td>PC, impresora, servidor, AP, teléfono</td><td>Otro switch o router</td></tr>
+    <tr><td><b>Comandos</b></td><td><code>switchport mode access</code><br><code>switchport access vlan N</code></td><td><code>switchport mode trunk</code><br><code>switchport trunk native vlan N</code><br><code>switchport trunk allowed vlan …</code></td></tr>
+  </table>
+</section>
+
+<section id="trama">
+  <h2>5 · Dentro de la etiqueta 802.1Q</h2>
+  <p class="lead">Son <b>4 bytes (32 bits)</b> insertados tras la MAC origen. Con ella los switches saben de qué VLAN es cada trama.</p>
+  <div data-scene="dot1q"></div>
+  <table>
+    <tr><th>Campo</th><th>Bits</th><th>Contenido</th></tr>
+    <tr><td><b>TPID</b></td><td>16</td><td><code>0x8100</code> → "trama 802.1Q"</td></tr>
+    <tr><td><b>PCP</b></td><td>3</td><td>Prioridad (CoS 0–7) para QoS</td></tr>
+    <tr><td><b>DEI</b> (antes CFI)</td><td>1</td><td>Elegible para descarte</td></tr>
+    <tr><td><b>VID</b></td><td>12</td><td>Número de VLAN: 1–4094 utilizables (0 y 4095 reservados)</td></tr>
+  </table>
+</section>
+
+<section id="troncal">
+  <h2>6 · Troncal, VLAN nativa y VLAN permitidas</h2>
+  <p class="lead">En un troncal todo va etiquetado <b>excepto la VLAN nativa</b>. Si los dos extremos no coinciden en la nativa, las VLAN se mezclan.</p>
+  <div data-scene="trunk"></div>
+</section>
+
+<section id="router">
+  <h2>7 · Comunicar VLAN distintas: router-on-a-stick</h2>
+  <p class="lead">Con una sola interfaz física y subinterfaces, el router recibe la trama por una VLAN y la saca por otra <b>por el mismo cable</b>. Fíjate en cómo cambia la <b>capa 2</b> mientras la <b>capa 3</b> (IP) se mantiene.</p>
+  <div data-scene="rtr"></div>
+</section>
+
+<section id="comandos">
+  <h2>8 · Comandos Cisco paso a paso</h2>
+  <p class="lead">Direccionamiento usado: <b class="b10">VLAN 10 VENTAS 192.168.10.0/24</b> (Fa0/1-16) · <b class="b20">VLAN 20 ADMIN 192.168.20.0/24</b> (Fa0/17-32) · <b class="b30">VLAN 30 INVITADOS 192.168.30.0/24</b> (Fa0/33-48) · <b class="b99">VLAN 99 NATIVA</b> · Gateway = <code>.1</code> de cada red.</p>
+  <div data-scene="cmds"></div>
+  <h3>Configuración completa (para copiar)</h3>
+  <div class="cfgs"><div class="cfg" id="cfg-sw"></div><div class="cfg" id="cfg-rt"></div></div>
+  <h3>Comandos útiles de mantenimiento</h3>
+  <table>
+    <tr><th>Objetivo</th><th>Comando</th></tr>
+    <tr><td>Sacar un puerto de su VLAN (vuelve a la VLAN 1)</td><td><code>interface f0/1</code> → <code>no switchport access vlan</code></td></tr>
+    <tr><td>Borrar una VLAN (sus puertos quedan sin VLAN activa)</td><td><code>no vlan 10</code> (en modo configuración global)</td></tr>
+    <tr><td>Ver puertos por VLAN / troncales / modo de un puerto</td><td><code>show vlan brief</code> · <code>show interfaces trunk</code> · <code>show interfaces f0/1 switchport</code></td></tr>
+    <tr><td>Borrar la base de datos de VLAN y reiniciar</td><td><code>delete flash:vlan.dat</code> → <code>reload</code></td></tr>
+    <tr><td>Ver la configuración</td><td><code>show running-config</code></td></tr>
+  </table>
+  <div class="box bad"><b>¿No hay conectividad? Revisa:</b>
+    <ul>
+      <li>¿El puerto del PC está en la VLAN correcta? (<code>show vlan brief</code>)</li>
+      <li>¿El troncal está <i>trunking</i> y la VLAN está en <code>allowed</code>? (<code>show interfaces trunk</code>)</li>
+      <li>¿VLAN nativa igual en los dos extremos?</li>
+      <li>¿La subinterfaz tiene el <code>encapsulation dot1Q</code> con el número correcto y la IP?</li>
+      <li>¿La interfaz física del router tiene <code>no shutdown</code>?</li>
+      <li>¿IP, máscara y gateway del PC corresponden a <b>su</b> VLAN?</li>
+    </ul>
+  </div>
+</section>
+
+<section id="extras">
+  <h2>9 · DTP y VTP</h2>
+  <h3>DTP: negociación automática del troncal</h3>
+  <p>DTP es un protocolo propietario de Cisco que negocia si un enlace es troncal o acceso. Viene activado de serie (modo <i>dynamic auto</i> en los Catalyst 2960/2950). <b>Se desactiva con <code>switchport nonegotiate</code></b> y fijando el modo a mano.</p>
+  <table>
+    <tr><th>Un extremo \ Otro</th><th>access</th><th>dynamic auto</th><th>dynamic desirable</th><th>trunk</th></tr>
+    <tr><td><b>access</b></td><td>access</td><td>access</td><td>access</td><td>⚠ fallo</td></tr>
+    <tr><td><b>dynamic auto</b></td><td>access</td><td>access</td><td><b>trunk</b></td><td><b>trunk</b></td></tr>
+    <tr><td><b>dynamic desirable</b></td><td>access</td><td><b>trunk</b></td><td><b>trunk</b></td><td><b>trunk</b></td></tr>
+    <tr><td><b>trunk</b></td><td>⚠ fallo</td><td><b>trunk</b></td><td><b>trunk</b></td><td><b>trunk</b></td></tr>
+  </table>
+  <div class="box info">Dos puertos en <i>dynamic auto</i> no forman troncal (ambos esperan a que el otro lo pida). Por seguridad: <code>switchport mode trunk</code> + <code>switchport nonegotiate</code>, y los puertos de usuario en <code>switchport mode access</code>.</div>
+  <h3>VTP: propagar las VLAN entre switches</h3>
+  <p>El <b>servidor VTP</b> crea las VLAN y los <b>clientes</b> las aprenden (actualizando su <code>vlan.dat</code>). Deben compartir <b>dominio</b> y <b>contraseña</b>.</p>
+  <div class="cfgs">
+    <div class="cfg"><div class="cfghead"><b>Servidor</b></div><pre>S1(config)# vtp mode server
+S1(config)# vtp domain asir
+S1(config)# vtp password cisco
+S1# show vtp status</pre></div>
+    <div class="cfg"><div class="cfghead"><b>Cliente</b></div><pre>S2(config)# vtp mode client
+S2(config)# vtp domain asir
+S2(config)# vtp password cisco
+S2# show vtp status</pre></div>
+  </div>
+  <div class="box"><b>Cuidado:</b> un switch que se conecta con <b>revision number mayor</b> puede sobrescribir las VLAN de toda la red. Antes de conectar un switch usado, <code>delete flash:vlan.dat</code> + <code>reload</code>, o ponlo en <code>vtp mode transparent</code>.</div>
+</section>
+
+<section id="resumen">
+  <h2>10 · Resumen y buenas prácticas</h2>
+  <div class="cards">
+    <div class="card"><h4>🧠 Ideas clave</h4><ul>
+      <li>VLAN = switch virtual = dominio de broadcast = subred.</li>
+      <li>Access: sin etiqueta, 1 VLAN. Troncal: con etiqueta, varias VLAN.</li>
+      <li>El switch etiqueta al entrar a un troncal y desetiqueta al salir por access.</li>
+      <li>VLAN nativa = tramas sin etiqueta; igual en ambos extremos.</li>
+      <li>Entre VLAN hace falta capa 3 (subinterfaces o switch L3).</li>
+    </ul></div>
+    <div class="card"><h4>✅ Buenas prácticas</h4><ul>
+      <li>Nombres descriptivos y documentar el plan de VLAN.</li>
+      <li>Una VLAN por grupo/departamento.</li>
+      <li>No usar la VLAN 1 para usuarios; nativa dedicada (99).</li>
+      <li>Limitar con <code>allowed vlan</code> y apagar puertos no usados.</li>
+      <li>Modo access/trunk fijo y <code>nonegotiate</code>.</li>
+    </ul></div>
+  </div>
+  <div class="box"><b>Matices respecto a los apuntes originales:</b>
+    <ul>
+      <li>Dividir en VLAN <b>aumenta</b> el número de dominios de broadcast (y reduce su tamaño).</li>
+      <li><code>no vlan 10</code> <b>elimina la VLAN</b>; para sacar un puerto de su VLAN se usa <code>no switchport access vlan</code> en la interfaz.</li>
+      <li>El borrado correcto es <code>delete flash:vlan.dat</code>.</li>
+      <li>En la interfaz física del router hay que poner <code>no shutdown</code>; las subinterfaces se salen con <code>exit</code> / <code>end</code>.</li>
+      <li>El campo <b>CFI</b> hoy se llama <b>DEI</b>; PCP (3 bits) es la prioridad. De 4096 VLAN solo 1–4094 son utilizables.</li>
+      <li>Para la VLAN nativa en el router: <code>encapsulation dot1Q 99 native</code>.</li>
+    </ul>
+  </div>
+</section>
+</main>
+<footer>Apuntes VLAN · Redes CCNA</footer>
+<script src="engine.js"></script>
+<script src="scenes1.js"></script>
+<script src="scenes2.js"></script>
+<script src="scenes3.js"></script>
+</body>
+</html>
