@@ -29,6 +29,7 @@
   <a href="#extras">9 · DTP y VTP</a>
   <a href="#resumen">10 · Resumen</a>
   <a href="laboratorio.html"><b>🧪 Laboratorio</b></a>
+  <a href="#test">12 · Test final</a>
 </nav>
 <div class="presentation-tools" aria-label="Controles de presentación">
   <button type="button" id="presentation-toggle" aria-pressed="false">⛶ Modo presentación</button>
@@ -202,6 +203,18 @@ S2# show vtp status</pre></div>
   <p class="lead">Un simulador con red de 2 switches + router, <b>terminal IOS</b> (con <code>?</code>, Tab y mensajes de error), pruebas de conectividad y <b>7 misiones</b> que se corrigen solas, incluido un reto de red averiada.</p>
   <p><a href="laboratorio.html" style="display:inline-block;background:var(--v10);color:#fff;padding:10px 22px;border-radius:10px;font-weight:700;text-decoration:none">🧪 Abrir el laboratorio</a></p>
 </section>
+<section id="test">
+  <h2>12 · Test final de VLAN</h2>
+  <p class="lead">Responde las 20 preguntas y pulsa «Corregir test» para ver tu puntuación, la solución y una explicación de cada respuesta. Puedes modificar tus respuestas y volver a corregir.</p>
+  <form id="quiz-form">
+    <div id="quiz-questions"></div>
+    <div class="quiz-actions">
+      <button type="submit">Corregir test</button>
+      <button type="reset">Reiniciar test</button>
+      <output id="quiz-score" aria-live="polite"></output>
+    </div>
+  </form>
+</section>
 </main>
 <footer>Apuntes VLAN · Redes CCNA</footer>
 <script src="engine.js"></script>
@@ -209,5 +222,6 @@ S2# show vtp status</pre></div>
 <script src="scenes2.js"></script>
 <script src="scenes3.js"></script>
 <script src="presentation.js"></script>
+<script src="quiz.js"></script>
 </body>
 </html>

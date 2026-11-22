@@ -18,14 +18,12 @@ Contenido:
 9. DTP y VTP
 10. Resumen y buenas prácticas
 11. Laboratorio interactivo
+12. Test final de 20 preguntas con puntuación, soluciones y explicaciones
 
+El test se corrige al pulsar «Corregir test»: muestra aciertos, errores y preguntas sin responder. Puedes cambiar las respuestas y volver a corregir, o reiniciarlo.
 ## Laboratorio interactivo
 
 Abre `laboratorio.html` (un único archivo, sin dependencias): red con 2 switches y un router, misiones con corrección automática y terminal IOS simulada. Cada solución permite aplicar los comandos y corregir los requisitos anteriores; a partir de la tercera misión también restablece las direcciones de los PC. Para configurar el router puede quitar direcciones IP en conflicto o desactivar otras subinterfaces. Los comandos ejecutados aparecen en la terminal de cada equipo y se puede seguir configurando manualmente. Los colores de los puertos reflejan la VLAN configurada y puedes seleccionar el destino de un ping o escribir su IP.
 
 El botón «Pantalla completa» amplía el laboratorio y ajusta la distribución al espacio disponible. Se puede salir con el mismo botón o con Esc.
 Las animaciones de ping muestran la petición de ida y la respuesta ICMP de vuelta cuando existe conectividad; también indican si falla el recorrido.
-
-## Versión laboratorio
-
-Abre `vlan-lab.html`: animación del broadcast sin/con VLAN y 7 laboratorios interactivos (broadcast, troncal y VLAN nativa, trama 802.1Q bit a bit, DTP, router-on-a-stick, terminal IOS simulada con misiones, VTP), trampas de examen, chuleta y test. Un solo archivo, sin dependencias.
