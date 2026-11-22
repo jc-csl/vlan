@@ -3,6 +3,7 @@
 Apuntes interactivos sobre VLAN con animaciones paso a paso.
 
 Abre `index.html` en el navegador (no necesita servidor ni dependencias).
+El botón «Modo presentación» amplía los apuntes a pantalla completa si el navegador lo permite; «Volver al inicio» lleva a la portada sin reiniciar las animaciones. Se puede salir de pantalla completa con el botón o con Esc.
 
 Contenido:
 
@@ -20,7 +21,10 @@ Contenido:
 
 ## Laboratorio interactivo
 
-Abre `laboratorio.html` (un único archivo, sin dependencias): red con 2 switches y un router, terminal IOS simulada, inspector de puertos, editor de bits de la etiqueta 802.1Q, panel DTP y 11 misiones con corrección automática (incluye un reto de red averiada).
+Abre `laboratorio.html` (un único archivo, sin dependencias): red con 2 switches y un router, misiones con corrección automática y terminal IOS simulada. Cada solución permite aplicar los comandos y corregir los requisitos anteriores; a partir de la tercera misión también restablece las direcciones de los PC. Para configurar el router puede quitar direcciones IP en conflicto o desactivar otras subinterfaces. Los comandos ejecutados aparecen en la terminal de cada equipo y se puede seguir configurando manualmente. Los colores de los puertos reflejan la VLAN configurada y puedes seleccionar el destino de un ping o escribir su IP.
+
+El botón «Pantalla completa» amplía el laboratorio y ajusta la distribución al espacio disponible. Se puede salir con el mismo botón o con Esc.
+Las animaciones de ping muestran la petición de ida y la respuesta ICMP de vuelta cuando existe conectividad; también indican si falla el recorrido.
 
 ## Versión laboratorio
 

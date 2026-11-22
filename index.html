@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="hero">
+<header class="hero" id="inicio">
+  <div class="hero-kicker">REDES · GUÍA INTERACTIVA</div>
   <h1>VLAN · Apuntes visuales</h1>
   <p>Cómo <b>un switch</b> se convierte en varios y <b>un cable</b> en varios, qué hace la <b>etiqueta 802.1Q</b>, qué es la <b>VLAN nativa</b> y los <b>comandos Cisco</b> para configurarlo todo. Cada animación se avanza paso a paso con <i>Siguiente ▶</i>.</p>
   <p class="web-online" style="margin:1em auto 0;font-size:.95rem">🌐 Versión online (GitHub Pages): <a href="https://jc-csl.github.io/vlan/" style="color:#f3b183;font-weight:700">jc-csl.github.io/vlan</a></p>
@@ -16,7 +17,7 @@
     <p><b>Declaración de uso de IA.</b> Estos apuntes sobre VLAN se basan en materiales del profesorado. Se ha utilizado inteligencia artificial como apoyo en la maquetación, las pruebas y la generación de animaciones. El contenido ha sido revisado y validado por el profesorado.</p>
   </div>
 </header>
-<nav>
+<nav aria-label="Contenido de los apuntes">
   <a href="#que">1 · Qué es</a>
   <a href="#desdoble">2 · 1 cable → 3 VLAN</a>
   <a href="#broadcast">3 · Broadcast</a>
@@ -29,6 +30,11 @@
   <a href="#resumen">10 · Resumen</a>
   <a href="laboratorio.html"><b>🧪 Laboratorio</b></a>
 </nav>
+<div class="presentation-tools" aria-label="Controles de presentación">
+  <button type="button" id="presentation-toggle" aria-pressed="false">⛶ Modo presentación</button>
+  <a href="#inicio">↑ Volver al inicio</a>
+  <span id="presentation-status" role="status"></span>
+</div>
 <main>
 
 <section id="que">
@@ -193,7 +199,7 @@ S2# show vtp status</pre></div>
 
 <section id="lab">
   <h2>11 · Ponlo en práctica: laboratorio interactivo</h2>
-  <p class="lead">Un simulador con red de 2 switches + router, <b>terminal IOS</b> (con <code>?</code>, Tab y mensajes de error reales), inspector de puertos, editor de bits 802.1Q, panel DTP y <b>11 misiones</b> que se corrigen solas, incluido un reto de red averiada.</p>
+  <p class="lead">Un simulador con red de 2 switches + router, <b>terminal IOS</b> (con <code>?</code>, Tab y mensajes de error), pruebas de conectividad y <b>7 misiones</b> que se corrigen solas, incluido un reto de red averiada.</p>
   <p><a href="laboratorio.html" style="display:inline-block;background:var(--v10);color:#fff;padding:10px 22px;border-radius:10px;font-weight:700;text-decoration:none">🧪 Abrir el laboratorio</a></p>
 </section>
 </main>
@@ -202,5 +208,6 @@ S2# show vtp status</pre></div>
 <script src="scenes1.js"></script>
 <script src="scenes2.js"></script>
 <script src="scenes3.js"></script>
+<script src="presentation.js"></script>
 </body>
 </html>

@@ -5,50 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Laboratorio VLAN · Simulador interactivo</title>
 <style>
-:root{--bg:#0b1220;--card:#131c2e;--card2:#1b2740;--ink:#e6edf7;--mute:#93a4bd;--line:#2b3a57;--v10:#3b82f6;--v20:#22c55e;--v30:#f59e0b;--v99:#a855f7;--bad:#ef4444;--ok:#22c55e;--warn:#fbbf24}
+:root{--bg:#0b1220;--card:#131c2e;--card2:#1b2740;--ink:#e6edf7;--mute:#a9bad0;--line:#344661;--v10:#3b82f6;--v20:#22c55e;--v30:#f59e0b;--v99:#a855f7;--bad:#ef4444;--ok:#22c55e;--warn:#fbbf24}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,sans-serif}
 a{color:#7cb2ff}
 code,.mono{font-family:Consolas,"Courier New",monospace}
 code{background:#0d1626;border:1px solid var(--line);border-radius:5px;padding:0 5px;font-size:13px;color:#9fe3b4}
-header.hero{padding:22px 20px 16px;background:linear-gradient(160deg,#10203d,#0b1220 60%);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
-header.hero h1{margin:0;font-size:1.6rem}
-header.hero p{margin:2px 0 0;color:var(--mute);max-width:760px;font-size:.92rem}
+header.hero{padding:10px 18px;background:radial-gradient(ellipse at 20% 0,#1d385a 0,transparent 58%),linear-gradient(180deg,#101d32,#0b1220);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+header.hero h1{margin:0;font-size:clamp(1.15rem,2vw,1.55rem);letter-spacing:-.03em;line-height:1.2}
+header.hero p{margin:2px 0 0;color:var(--mute);font-size:.85rem}
+.back-link{white-space:nowrap;display:inline-block}
 .hbtns{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#fullscreen-status{color:#ffd69b;font-size:.8rem}
+#fullscreen-status:empty{display:none}
+html:fullscreen{background:var(--bg)}
+html:fullscreen main{max-width:none}
 button,select,input[type=text],input[type=number]{font:inherit;color:var(--ink)}
-button{background:#22304f;border:1px solid #3a4c74;border-radius:8px;padding:5px 12px;cursor:pointer;font-weight:600;font-size:.85rem}
+button{background:#22304f;border:1px solid #3a4c74;border-radius:8px;padding:7px 12px;cursor:pointer;font-weight:600;font-size:.85rem}
 button:hover:not(:disabled){background:#2d4068}
-button.primary{background:var(--v10);border-color:var(--v10);color:#fff}
+button.primary{background:#2563b8;border-color:#4c91e6;color:#fff}
 button.danger{background:#5b1f27;border-color:#8b2c38}
+:focus-visible{outline:3px solid #7dd3fc;outline-offset:3px}
 select,input[type=text],input[type=number]{background:#0d1626;border:1px solid #3a4c74;border-radius:6px;padding:4px 8px;font-size:.9rem}
 select:disabled,input:disabled{opacity:.45}
-main{max-width:1280px;margin:0 auto;padding:14px 14px 50px}
-.grid{display:grid;gap:14px;margin-bottom:14px;grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr)}
-.grid.eq{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-@media(max-width:980px){.grid,.grid.eq{grid-template-columns:minmax(0,1fr)}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
-.card h2{margin:0 0 4px;font-size:1.12rem;border-left:5px solid var(--v10);padding-left:9px}
+main{max-width:1800px;margin:0 auto;padding:10px 14px 28px}
+.workspace{display:grid;gap:10px;grid-template-columns:minmax(0,1fr);align-items:stretch;margin-bottom:10px}
+.card{background:linear-gradient(145deg,#17243a,var(--card));border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0;box-shadow:0 14px 32px #0002}
+.card h2{margin:0 0 6px;font-size:1.12rem;line-height:1.3;letter-spacing:-.02em;border-left:4px solid #60a5fa;padding-left:10px}
 .card h3{margin:12px 0 6px;font-size:.98rem}
 .lead{color:var(--mute);margin:0 0 8px;font-size:.88rem}
-.svgwrap{background:#0a1020;border-radius:10px;border:1px solid var(--line)}
+.svgwrap{background:#0a1020;border-radius:10px;border:1px solid var(--line);display:flex;justify-content:center;min-height:0}
 svg.svg{width:100%;height:auto;display:block}
 svg text{font-family:"Segoe UI",system-ui,sans-serif;fill:#e6edf7;font-size:12px}
 svg .dev{fill:#1b2740;stroke:#64748b;stroke-width:2}
-svg .b{cursor:pointer}
 svg .b rect{stroke:#0a1020;stroke-width:1.5}
-svg .b:hover rect{stroke:#fff}
-svg .b.sel rect{stroke:#fff;stroke-width:2.5}
 svg .b text{fill:#0a1020;font-weight:800;font-size:10.5px;pointer-events:none}
 svg .halo{paint-order:stroke;stroke:#0a1020;stroke-width:4px;stroke-linejoin:round}
 .mut{fill:#93a4bd!important}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.pcs{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px 8px;align-items:center;font-size:.85rem;margin:6px 0}
+.pcs{display:grid;grid-template-columns:auto repeat(3,minmax(110px,1fr));gap:6px 8px;align-items:center;font-size:.85rem;margin:8px 0;overflow-x:auto;padding-bottom:4px}
 .pcs input{width:100%;font-size:.82rem;padding:3px 6px}
 .pcs .h{color:var(--mute);font-size:.75rem}
 pre{margin:0}
 .out{background:#05080f;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:12.5px/1.4 Consolas,"Courier New",monospace;white-space:pre-wrap;min-height:70px;max-height:230px;overflow:auto;color:#b6c2d6}
 .out .diag{color:#fbbf24}.out .okk{color:#4ade80}.out .badd{color:#f87171}
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.78rem;color:var(--mute);margin:6px 0 0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.8rem;color:var(--mute);margin:12px 0 0}
 .legend i{display:inline-block;width:22px;height:5px;border-radius:3px;vertical-align:middle;margin-right:4px}
 /* misiones */
 #mhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -56,7 +57,7 @@ pre{margin:0}
 .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--v10),var(--ok));width:0;transition:width .5s}
 .ms{border:1px solid var(--line);border-radius:10px;margin-bottom:7px;background:#0f1828}
 .ms.done{border-color:#1f6b3a}
-.ms .mh{display:flex;gap:8px;align-items:center;padding:7px 10px;cursor:pointer;font-weight:600;font-size:.9rem}
+.ms .mh{display:flex;gap:8px;align-items:center;width:100%;padding:10px;text-align:left;background:transparent;border:0;border-radius:10px;cursor:pointer;font-weight:600;font-size:.9rem}
 .ms .mh .n{width:22px;height:22px;border-radius:50%;background:#22304f;display:grid;place-items:center;font-size:.75rem;flex:none}
 .ms.done .mh .n{background:var(--ok);color:#04210f}
 .ms .mb{padding:0 10px 9px 40px;font-size:.84rem;color:#cfd9ea}
@@ -69,131 +70,88 @@ pre{margin:0}
 #toast{position:fixed;right:16px;bottom:16px;background:#14532d;color:#dcfce7;border:1px solid #22c55e;border-radius:10px;padding:10px 16px;font-weight:600;opacity:0;transform:translateY(12px);transition:.4s;pointer-events:none;z-index:50;max-width:340px}
 #toast.on{opacity:1;transform:none}
 /* terminal */
-.tabs{display:flex;gap:6px;margin-bottom:6px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .tabs button.act{background:var(--v30);border-color:var(--v30);color:#1a1200}
-#term{background:#05080f;border:1px solid var(--line);border-radius:8px 8px 0 0;padding:8px 10px;height:380px;overflow:auto;font:13px/1.4 Consolas,"Courier New",monospace;color:#d7e0ee;white-space:pre-wrap;word-break:break-word}
+#term{background:#05080f;border:1px solid var(--line);border-radius:8px 8px 0 0;padding:8px 10px;height:300px;overflow:auto;font:26px/1.3 Consolas,"Courier New",monospace;color:#d7e0ee;white-space:pre-wrap;word-break:break-word}
 #term .echo{color:#f1f5f9}#term .pr{color:#7dd3fc}#term .err{color:#f87171}#term .log{color:#fbbf24}#term .lab{color:#4ade80}#term .info{color:#93a4bd}
-.inl{display:flex;gap:6px;background:#05080f;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px;padding:6px 10px;align-items:center;font:13px Consolas,monospace}
+.inl{display:flex;gap:6px;background:#05080f;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px;padding:6px 10px;align-items:center;font:26px Consolas,monospace}
 .inl #prompt{color:#7dd3fc;white-space:nowrap}
-.inl input{flex:1;background:transparent;border:0;outline:0;color:#f1f5f9;font:13px Consolas,monospace;padding:2px}
-details.help{margin-top:8px;font-size:.82rem;color:var(--mute)}
-details.help summary{cursor:pointer;color:#7cb2ff}
-details.help pre{margin-top:6px;font:12px/1.45 Consolas,monospace;color:#b6c2d6;background:#0d1626;padding:8px;border-radius:8px;overflow:auto}
+.inl input{flex:1;min-width:0;background:transparent;border:0;color:#f1f5f9;font:26px Consolas,monospace;padding:2px}
 #curm{margin-top:8px;font-size:.85rem;background:#0f1828;border:1px dashed #3a4c74;border-radius:8px;padding:6px 10px;color:#cfd9ea}
-/* inspector */
-.fg{display:grid;grid-template-columns:130px 1fr;gap:6px 10px;align-items:center;font-size:.88rem;margin:8px 0}
-.state{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:700;font-size:.8rem;background:#334155}
-.msg{color:#fbbf24;font-size:.82rem;min-height:1.2em}
-table.vt{border-collapse:collapse;width:100%;font-size:.82rem;margin:4px 0}
-table.vt th,table.vt td{border:1px solid var(--line);padding:3px 7px;text-align:left}
-table.vt th{background:var(--card2)}
-.vdb{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:700px){.vdb{grid-template-columns:1fr}}
-.vdb form{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
-.vdb form input[type=number]{width:70px}.vdb form input[type=text]{width:110px}
-/* tag editor */
-.bits{display:flex;flex-wrap:wrap;gap:2px;align-items:flex-end;margin:6px 0}
-.bits .grp{display:flex;flex-direction:column;align-items:center;gap:2px;margin-right:8px}
-.bits .gl{font-size:.72rem;font-weight:700}
-.bits .row2{display:flex;gap:2px}
-.bit{width:28px;height:30px;padding:0;border-radius:5px;font:700 14px Consolas,monospace;border:1px solid #0a1020;color:#0a1020}
-.bit.off{opacity:.55}
-.bit.fix{background:#334155;color:#cbd5e1;cursor:default}
-.wt{font-size:9px;color:var(--mute);width:28px;text-align:center}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:.86rem;margin:8px 0}
-.kv b{color:var(--mute);font-weight:600}
-.eff{border-left:4px solid var(--v10);background:#0f1828;padding:6px 10px;border-radius:0 8px 8px 0;font-size:.85rem;margin-top:6px}
-table.dtp{border-collapse:collapse;font-size:.78rem;margin:8px 0;width:100%}
-table.dtp th,table.dtp td{border:1px solid var(--line);padding:4px 6px;text-align:center}
-table.dtp th{background:var(--card2)}
-table.dtp td.t{background:#123a22;color:#bbf7d0}table.dtp td.a{background:#1d2b46;color:#bcd0f5}table.dtp td.m{background:#4b1d22;color:#fecaca}
-table.dtp td.cur{outline:3px solid #fff;outline-offset:-3px;font-weight:800}
+@media(min-width:1000px){
+ .workspace.network-row{grid-template-columns:minmax(0,2fr) minmax(300px,1fr)}
+ .workspace.work-row{grid-template-columns:minmax(300px,1fr) minmax(0,2fr)}
+}
+@media(min-width:1000px) and (min-height:650px){
+ body{height:100vh;height:100dvh;display:flex;flex-direction:column}
+ main{width:100%;flex:1;min-height:0;display:grid;grid-template-rows:minmax(0,48fr) minmax(0,52fr);gap:10px;padding-bottom:10px}
+ .workspace{min-height:0;margin:0}
+ .workspace>.card{min-height:0;overflow:auto}
+ .topology{display:flex;flex-direction:column}
+ .topology .svgwrap{flex:1;overflow:hidden}
+ .topology svg.svg{width:auto;max-width:100%;height:100%}
+ .terminal-card{display:flex;flex-direction:column}
+ #term{height:auto;flex:1;min-height:70px}
+}
+@media(max-width:600px){header.hero{padding:10px 12px}.card{padding:12px}main{padding:10px 10px 28px}.row label{max-width:100%}.tabs button{flex:0 1 auto}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
 <header class="hero">
   <div>
     <h1>🧪 Laboratorio VLAN · simulador interactivo</h1>
-    <p>Configura puertos, troncales, VLAN nativa, etiquetas 802.1Q y DTP con la <b>terminal IOS</b> o con los controles gráficos (hacen lo mismo). Cada <b>misión</b> se comprueba sola. <a href="index.html">← Volver a los apuntes</a></p>
+    <p>Configura la red en la <b>terminal IOS</b> y comprueba la conectividad. <a class="back-link" href="index.html">← Volver a los apuntes</a></p>
   </div>
   <div class="hbtns">
     <label style="font-size:.82rem;color:var(--mute)">Velocidad animación
       <select id="spd"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label>
+    <button id="fullscreen-toggle" type="button" aria-pressed="false">⛶ Pantalla completa</button>
     <button id="reset" class="danger">↺ Reiniciar laboratorio</button>
+    <span id="fullscreen-status" role="status"></span>
   </div>
 </header>
 <main>
-  <div class="grid">
-    <section class="card">
+  <div class="workspace network-row">
+    <section class="card topology">
       <h2>Red del laboratorio</h2>
-      <p class="lead">Pulsa un puerto (etiqueta de color) para inspeccionarlo y cambiarlo. El color indica la VLAN del puerto <i>access</i>; gris = troncal; rojo/naranja discontinuo = enlace mal configurado.</p>
+      <p class="lead" id="ping-route" aria-live="polite">Selecciona origen y destino para visualizar un ping.</p>
+      <p class="lead" id="ping-phase" aria-live="polite"></p>
       <div class="svgwrap" id="topo"></div>
       <div class="legend">
-        <span><i style="background:#3b82f6"></i>VLAN 10</span><span><i style="background:#22c55e"></i>VLAN 20</span><span><i style="background:#a855f7"></i>VLAN 99</span><span><i style="background:#94a3b8"></i>VLAN 1</span><span><i style="background:#64748b;height:8px"></i>Troncal</span><span><i style="background:#ef4444"></i>Fallo / desajuste</span>
+        <span><i style="background:#3b82f6"></i>VLAN 10</span><span><i style="background:#22c55e"></i>VLAN 20</span><span><i style="background:#f59e0b"></i>VLAN 30</span><span><i style="background:#a855f7"></i>VLAN 99</span><span><i style="background:#94a3b8"></i>VLAN 1</span><span><i style="background:#64748b;height:8px"></i>Troncal</span><span><i style="background:#ef4444"></i>Fallo / desajuste</span>
       </div>
-      <h3>Direcciones IP de los PCs (editables)</h3>
-      <div class="pcs" id="pcs"></div>
-      <h3>Enviar un ping (con animación del recorrido de la trama)</h3>
+    </section>
+    <section class="card ping-card">
+      <h2>Enviar un ping</h2>
+      <p class="lead">Selecciona el origen y el destino para ver el recorrido en la topología.</p>
       <div class="row">
         <label>Desde <select id="psrc"></select></label>
-        <label>Hacia <input type="text" id="pdst" list="ips" size="16" value="192.168.10.12"></label>
-        <datalist id="ips"></datalist>
+        <label>Destino <select id="pdest"></select></label>
+        <label>IP de destino <input type="text" id="pdst" size="16" value="192.168.10.12" aria-label="IP de destino"></label>
         <button id="pgo" class="primary">▶ Ping</button>
-        <span class="lead" style="margin:0">Prueba también: PC1 → PC3 (misma VLAN), PC1 → PC4 (entre VLAN)</span>
       </div>
       <div class="out" id="pout" style="margin-top:8px">Aquí verás el resultado del ping y, si falla, el diagnóstico del simulador.</div>
+      <h3>Direcciones IP de los PCs (editables)</h3>
+      <div class="pcs" id="pcs"></div>
+      <p class="lead">Prueba PC1 → PC3 (misma VLAN) o PC1 → PC4 (entre VLAN).</p>
     </section>
-    <section class="card">
+  </div>
+  <div class="workspace work-row">
+    <section class="card missions">
       <div id="mhead"><h2 style="margin:0">Misiones</h2><span id="mcount" class="tag">0/0</span></div>
+      <p class="lead">Abre una misión y escribe los comandos. «Pista / solución» permite aplicar la solución y sus requisitos anteriores.</p>
+      <div id="solution-status" role="status" aria-live="polite" tabindex="-1"></div>
       <div class="bar"><i id="mbar"></i></div>
       <div id="mlist"></div>
     </section>
-  </div>
-
-  <div class="grid eq">
-    <section class="card">
+    <section class="card terminal-card">
       <h2>Terminal IOS simulada</h2>
-      <p class="lead">Elige el equipo. Empieza con <code>enable</code> y <code>configure terminal</code>. Admite abreviaturas, <b>Tab</b>, <b>?</b> y ↑/↓.</p>
+      <p class="lead">Selecciona S1, S2 o R1. Empieza con <code>enable</code> y <code>configure terminal</code>. Admite <b>Tab</b>, <b>?</b> y ↑/↓.</p>
       <div class="tabs" id="tabs"><button data-dev="S1" class="act">S1</button><button data-dev="S2">S2</button><button data-dev="R1">R1 (router)</button><button id="clr" style="margin-left:auto">Limpiar</button></div>
       <div id="term"></div>
-      <div class="inl"><span id="prompt"></span><input id="cmd" autocomplete="off" spellcheck="false" autocapitalize="off"></div>
+      <div class="inl"><span id="prompt"></span><input id="cmd" aria-label="Comando IOS" autocomplete="off" spellcheck="false" autocapitalize="off"></div>
       <div id="curm"></div>
-      <details class="help"><summary>Comandos disponibles</summary><pre id="helptxt"></pre></details>
-    </section>
-    <section class="card">
-      <h2>Inspector de puerto</h2>
-      <div id="insp"></div>
-      <h3>Base de datos de VLAN (<span class="mono">show vlan brief</span>)</h3>
-      <div class="vdb" id="vdb"></div>
-    </section>
-  </div>
-
-  <div class="grid eq">
-    <section class="card">
-      <h2>Editor de bits de la etiqueta 802.1Q</h2>
-      <p class="lead">Pulsa los bits para cambiarlos. La etiqueta mide 32 bits: TPID (16) + TCI (16 = PCP 3 + DEI 1 + VID 12).</p>
-      <div class="bits" id="bits"></div>
-      <div class="row" style="margin:6px 0">
-        <label>VID (decimal) <input type="number" id="vidn" min="0" max="4095" style="width:84px"></label>
-        <button data-tp="10">VLAN 10</button><button data-tp="20v">VLAN 20 voz (PCP 5)</button><button data-tp="99">VLAN 99</button><button data-tp="0">Todo a 0</button>
-      </div>
-      <div class="kv" id="tagkv"></div>
-      <div class="eff" id="tageff"></div>
-    </section>
-    <section class="card">
-      <h2>DTP: ¿se forma el troncal S1 ↔ S2?</h2>
-      <p class="lead">Enlace S1 <b>Gi0/2</b> ↔ S2 <b>Gi0/1</b>. Cambia el modo de cada extremo y mira el resultado de la negociación.</p>
-      <div class="row">
-        <label>S1 Gi0/2 <select id="dtpA"></select></label>
-        <label><input type="checkbox" id="dtpAn"> nonegotiate</label>
-      </div>
-      <div class="row" style="margin-top:6px">
-        <label>S2 Gi0/1 <select id="dtpB"></select></label>
-        <label><input type="checkbox" id="dtpBn"> nonegotiate</label>
-      </div>
-      <div id="dtpres" class="eff" style="margin:8px 0"></div>
-      <div id="dtpmx"></div>
-      <p class="lead">Con <code>nonegotiate</code> el puerto no envía DTP: un vecino en <i>auto</i> o <i>desirable</i> se queda en access. No se puede combinar con modos <i>dynamic</i>.</p>
     </section>
   </div>
 </main>
@@ -217,9 +175,7 @@ const PTS = {
   'S1:Fa0/1': [170, 260], 'S1:Fa0/2': [290, 260], 'S1:Gi0/1': [230, 200], 'S1:Gi0/2': [330, 230],
   'S2:Fa0/1': [670, 260], 'S2:Fa0/2': [790, 260], 'S2:Gi0/1': [630, 230], 'R1:G0/0': [230, 95]
 };
-const MODES = ['access', 'trunk', 'dynamic auto', 'dynamic desirable'];
-
-let S, PCS, TAG, DONE, CHAL;
+let S, PCS, DONE, CHAL;
 const mkPort = () => ({ mode: 'dynamic auto', access: 1, native: 1, allowed: null, nonego: false, shut: false, desc: '' });
 function mkSwitch(name) {
   const ports = {}; PORT_ORDER.forEach(p => ports[p] = mkPort());
@@ -237,7 +193,7 @@ function freshState() {
     PC3: { ip: '192.168.10.12', mask: '255.255.255.0', gw: '192.168.10.1', port: ['S2', 'Fa0/1'] },
     PC4: { ip: '192.168.20.12', mask: '255.255.255.0', gw: '192.168.20.1', port: ['S2', 'Fa0/2'] }
   };
-  TAG = 10; DONE = new Set(); CHAL = false;
+  DONE = new Set(); CHAL = false;
 }
 
 /* ---- utilidades ---- */
@@ -273,7 +229,6 @@ function dtpEnd(own, peer, peerNeg) {
   if (peer === 'trunk' || peer === 'dynamic desirable' || (peer === 'dynamic auto' && own === 'dynamic desirable')) return 'trunk';
   return 'access';
 }
-function dtpPair(a, b) { const x = dtpEnd(a, b, false), y = dtpEnd(b, a, false); return x === y ? x : 'mismatch'; }
 function eff(sw, pn, adm) {
   const p = S[sw].ports[pn], peer = LINKS[sw + ':' + pn];
   if (!adm) {
@@ -398,8 +353,8 @@ function sim(src, dst) {
   if (!ip2n(dst)) { R.why = 'Dirección de destino no válida'; return R; }
   if (dst === pc.ip) { R.ok = true; R.ttl = 128; return R; }
   const ifs = rifs(), rIf = ifs.find(i => i.ip === dst), tgt = pcOf(dst);
-  const gwWhy = f => S.R1.ifs['G0/0'].shut ? 'La interfaz G0/0 de R1 está en shutdown (falta "no shutdown")'
-    : f.recv.some(r => r.kind === 'rtr') ? `La trama llega a R1 pero ninguna subinterfaz atiende esa VLAN con la IP ${pc.gw} (revisa encapsulation dot1Q e ip address)`
+  const gwWhy = (f, sender = pc) => S.R1.ifs['G0/0'].shut ? 'La interfaz G0/0 de R1 está en shutdown (falta "no shutdown")'
+    : f.recv.some(r => r.kind === 'rtr') ? `La trama llega a R1 pero ninguna subinterfaz atiende esa VLAN con la IP ${sender.gw} (revisa encapsulation dot1Q e ip address)`
     : (bestDrop(f) ? bestDrop(f).reason : 'No hay camino de capa 2 hasta el router');
   if (sameNet(pc.ip, dst, pc.mask)) {
     const f = pcFlood(src);
@@ -409,6 +364,7 @@ function sim(src, dst) {
     const f2 = tgt ? pcFlood(tgt) : rtrFlood(rIf);
     const h2 = f2.recv.find(r => r.kind === 'pc' && r.id === src);
     if (!h2) return failWith(f2, 'La petición llega, pero la respuesta no vuelve: ' + ((bestDrop(f2) || {}).reason || 'sin camino de vuelta'), true);
+    R.segs.push({ path: h2.path, reply: true });
     R.ok = true; R.ttl = tgt ? 128 : 255; return R;
   }
   if (!pc.gw) { R.why = 'El destino está en otra red y el PC no tiene puerta de enlace'; return R; }
@@ -422,6 +378,7 @@ function sim(src, dst) {
     if (!back) { R.why = 'R1 no tiene interfaz hacia la red del PC: la respuesta no vuelve'; return R; }
     const fb = rtrFlood(back), hb = fb.recv.find(r => r.kind === 'pc' && r.id === src);
     if (!hb) return failWith(fb, '', true);
+    R.segs.push({ path: hb.path, reply: true });
     R.ok = true; R.ttl = 255; return R;
   }
   const out = ifForNet(dst);
@@ -432,9 +389,11 @@ function sim(src, dst) {
   const t = PCS[tgt];
   if (!t.gw) { R.why = `${tgt} no tiene puerta de enlace: la respuesta no vuelve`; return R; }
   const f3 = pcFlood(tgt), h3 = f3.recv.find(r => r.kind === 'rtr' && (rtrRecv(r) || {}).ip === t.gw);
-  if (!h3) return failWith(f3, `${tgt} no alcanza su gateway ${t.gw}: la respuesta no vuelve. ` + gwWhy(f3), true);
+  if (!h3) return failWith(f3, `${tgt} no alcanza su gateway ${t.gw}: la respuesta no vuelve. ` + gwWhy(f3, t), true);
+  R.segs.push({ path: h3.path, reply: true });
   const f4 = rtrFlood(back), h4 = f4.recv.find(r => r.kind === 'pc' && r.id === src);
   if (!h4) return failWith(f4, 'La respuesta llega a R1 pero no puede volver a ' + src, true);
+  R.segs.push({ path: h4.path, reply: true });
   R.ok = true; R.ttl = 127; return R;
 }
 /* ---- ping desde el router ---- */
@@ -447,7 +406,9 @@ function simRtr(dst) {
   if (!h) { const d = bestDrop(f); R.fail = d; R.why = d ? d.reason : `Nadie con la IP ${dst} en ${out.name}`; return R; }
   R.segs.push({ path: h.path });
   const f2 = pcFlood(tgt);
-  if (!f2.recv.find(r => r.kind === 'rtr' && (rtrRecv(r) || {}).name === out.name)) { R.fail = bestDrop(f2); R.failReply = true; R.why = 'La petición llega pero la respuesta no vuelve'; return R; }
+  const h2 = f2.recv.find(r => r.kind === 'rtr' && (rtrRecv(r) || {}).name === out.name);
+  if (!h2) { R.fail = bestDrop(f2); R.failReply = true; R.why = 'La petición llega pero la respuesta no vuelve'; return R; }
+  R.segs.push({ path: h2.path, reply: true });
   R.ok = true; return R;
 }
 
@@ -736,7 +697,8 @@ C('user priv', 'ping <ip>', x => {
   x.P('Type escape sequence to abort.'); x.P(`Sending 5, 100-byte ICMP Echos to ${x.a.ip}, timeout is 2 seconds:`);
   x.P(R.ok ? '!!!!!' : '.....'); x.P(R.ok ? 'Success rate is 100 percent (5/5), round-trip min/avg/max = 1/2/4 ms' : 'Success rate is 0 percent (0/5)');
   if (!R.ok && R.why) x.P('[Lab] ' + R.why, 'log');
-  if (typeof animate === 'function') animate(R.segs, R.fail, !!R.failReply);
+  $('#ping-route').textContent = `Ping: R1 → ${x.a.ip}`;
+  animate(R);
 }, 'rtr');
 
 /* ---- ayuda (?) y autocompletado (Tab) ---- */
@@ -791,20 +753,6 @@ function initSessions() {
   P(T.ses.S2, 'S2 · Catalyst 2960 (simulado). Puertos: Fa0/1-24, Gi0/1-2. Escribe "enable" para empezar; "?" muestra ayuda.', 'info');
   P(T.ses.R1, 'R1 · Router (simulado). Interfaz G0/0 conectada a S1 Gi0/1. Escribe "enable" para empezar; "?" muestra ayuda.', 'info');
 }
-const HELP = `Todos:   enable · disable · configure terminal · exit · end · hostname X · do <show...> · ? · Tab
-         copy running-config startup-config · write memory
-Switch:  vlan N · name X · no vlan N · interface fa0/1 · interface range fa0/1 - 16
-         switchport mode access|trunk|dynamic auto|dynamic desirable
-         switchport access vlan N · switchport trunk native vlan N
-         switchport trunk allowed vlan 10,20 | add N | remove N | except N | all | none
-         switchport nonegotiate · shutdown · no shutdown · description X
-         no switchport mode|access vlan|trunk native vlan|trunk allowed vlan|nonegotiate
-         show vlan brief · show interfaces trunk · show interfaces gi0/1 switchport
-         show interfaces status · show ip interface brief · show running-config
-Router:  interface g0/0 · interface g0/0.10 · no interface g0/0.10
-         encapsulation dot1Q N [native] · ip address A.B.C.D M.M.M.M · no shutdown
-         show ip interface brief · show ip route · show running-config · ping A.B.C.D
-Nota: en un 2960 no existe "switchport trunk encapsulation" (solo 802.1Q).`;
 /* =====================  C · INTERFAZ  ===================== */
 const NSV = 'http://www.w3.org/2000/svg';
 function mk(tag, attrs, parent, text) {
@@ -813,12 +761,12 @@ function mk(tag, attrs, parent, text) {
   if (text !== undefined) e.textContent = text;
   if (parent) parent.appendChild(e); return e;
 }
-let SEL = { sw: 'S1', pn: 'Gi0/2' }, TOPO = {}, SPEED = 1, INS_MSG = '';
+let TOPO = {}, SPEED = 1;
 const BP = { 'S1:Fa0/1': [170, 282], 'S1:Fa0/2': [290, 282], 'S1:Gi0/1': [230, 172], 'S1:Gi0/2': [372, 230], 'S2:Fa0/1': [670, 282], 'S2:Fa0/2': [790, 282], 'S2:Gi0/1': [588, 230] };
 
 /* ---- topología ---- */
 function buildTopo() {
-  const svg = mk('svg', { viewBox: '0 0 900 470', class: 'svg' }, $('#topo')); TOPO.svg = svg;
+  const svg = mk('svg', { viewBox: '110 15 740 450', class: 'svg' }, $('#topo')); TOPO.svg = svg;
   const gL = mk('g', {}, svg), gD = mk('g', {}, svg), gB = mk('g', {}, svg); TOPO.gPkt = mk('g', {}, svg);
   TOPO.links = [['S1:Fa0/1', 'PC1'], ['S1:Fa0/2', 'PC2'], ['S2:Fa0/1', 'PC3'], ['S2:Fa0/2', 'PC4'], ['S1:Gi0/1', 'R1:G0/0'], ['S1:Gi0/2', 'S2:Gi0/1']]
     .map(([a, b]) => ({ a, b, line: mk('line', { x1: PTS[a][0], y1: PTS[a][1], x2: PTS[b][0], y2: PTS[b][1], 'stroke-linecap': 'round' }, gL) }));
@@ -843,7 +791,6 @@ function buildTopo() {
     const [sw, pn] = key.split(':'), [x, y] = BP[key];
     const g = mk('g', { class: 'b' }, gB);
     const r = mk('rect', { x: x - 38, y: y - 9, width: 76, height: 18, rx: 9 }, g), t = mk('text', { x, y: y + 4, 'text-anchor': 'middle' }, g, '');
-    g.addEventListener('click', () => { SEL = { sw, pn }; INS_MSG = ''; refresh(); });
     TOPO.badges[key] = { g, r, t };
   }
 }
@@ -878,11 +825,11 @@ function drawTopo() {
     if (e.kind === 'down') { txt = pn + ' ✕'; fill = '#475569'; }
     else if (e.kind === 'trunk') { txt = pn + ' · TRUNK'; fill = '#94a3b8'; }
     else { txt = `${pn} · V${e.vlan}` + (S[sw].vlans[e.vlan] ? '' : '?'); fill = vcol(e.vlan); }
-    B.t.textContent = txt; B.r.setAttribute('fill', fill); B.g.classList.toggle('sel', sw === SEL.sw && pn === SEL.pn);
+    B.t.textContent = txt; B.r.setAttribute('fill', fill);
   }
   for (const id in PCS) {
     const [sw, pn] = PCS[id].port, e = eff(sw, pn);
-    TOPO.pc[id].scr.setAttribute('stroke', e.kind === 'access' ? vcol(e.vlan) : e.kind === 'trunk' ? RED : '#475569');
+    TOPO.pc[id].scr.style.stroke = e.kind === 'access' ? vcol(e.vlan) : e.kind === 'trunk' ? RED : '#475569';
     TOPO.pc[id].ip.textContent = PCS[id].ip || '';
   }
   const R = S.R1, g = R.ifs['G0/0'];
@@ -894,13 +841,14 @@ function drawTopo() {
 let ANIMID = 0;
 const sleep = ms => new Promise(r => setTimeout(r, ms / SPEED));
 function tweenMs(ms, fn) { return new Promise(res => { const t0 = performance.now(), d = ms / SPEED; (function f(t) { const p = Math.min(1, (t - t0) / d); fn(p); p < 1 ? requestAnimationFrame(f) : res(); })(t0); }); }
-function clearPkt() { ANIMID++; if (TOPO.gPkt) TOPO.gPkt.innerHTML = ''; }
-async function animate(segs, fail, failReply) {
+function clearPkt() { ANIMID++; if (TOPO.gPkt) TOPO.gPkt.innerHTML = ''; $('#ping-phase').textContent = ''; }
+async function animate(result) {
   const id = ++ANIMID, L = TOPO.gPkt; L.innerHTML = '';
-  const all = segs.slice(); if (fail) all.push({ path: fail.path, drop: true, reply: failReply });
-  if (!all.length) return;
+  const phase = $('#ping-phase');
+  const all = result.segs.slice(); if (result.fail) all.push({ path: result.fail.path, drop: true, reply: result.failReply });
+  if (!all.length) { phase.textContent = result.ok ? 'Ping local: no sale ninguna trama a la red.' : 'No hay recorrido disponible para animar.'; return; }
   const g = mk('g', {}, L);
-  mk('rect', { x: -11, y: -7, width: 22, height: 14, rx: 2, fill: '#e2e8f0', stroke: '#0a1020' }, g);
+  const packet = mk('rect', { x: -11, y: -7, width: 22, height: 14, rx: 2, fill: '#e2e8f0', stroke: '#0a1020' }, g);
   mk('path', { d: 'M-11,-7 L0,2 L11,-7', fill: 'none', stroke: '#0a1020', opacity: .5 }, g);
   const chipG = mk('g', { transform: 'translate(0,-18)' }, g), cr = mk('rect', { x: -26, y: -8, width: 52, height: 15, rx: 7, fill: '#3b82f6', stroke: '#0a1020' }, chipG);
   const ct = mk('text', { x: 0, y: 3, 'text-anchor': 'middle', style: 'fill:#0a1020;font-weight:800;font-size:9.5px' }, chipG, '');
@@ -911,7 +859,11 @@ async function animate(segs, fail, failReply) {
   let cur = null;
   for (let s = 0; s < all.length; s++) {
     const seg = all[s];
-    if (s > 0 && !seg.drop) { const n = mk('text', { x: 340, y: 64, class: 'halo', style: 'font-weight:700;fill:#fbbf24' }, L, 'R1 enruta…'); await sleep(700); n.remove(); }
+    phase.textContent = seg.reply ? 'Respuesta ICMP (echo reply) · vuelta' : 'Petición ICMP (echo request) · ida';
+    packet.setAttribute('fill', seg.reply ? '#4ade80' : '#e2e8f0');
+    if (s > 0 && all[s - 1].reply === seg.reply && seg.path[0].a === 'R1') {
+      const n = mk('text', { x: 340, y: 64, class: 'halo', style: 'font-weight:700;fill:#fbbf24' }, L, 'R1 enruta…'); await sleep(700); n.remove();
+    }
     for (let i = 0; i < seg.path.length; i++) {
       if (id !== ANIMID) return;
       const h = seg.path[i], a = PTS[key(h.a, h.ap)], b = PTS[key(h.b, h.bp)];
@@ -921,7 +873,8 @@ async function animate(segs, fail, failReply) {
     if (id !== ANIMID) return;
   }
   g.remove();
-  const bad = !!fail;
+  const bad = !result.ok;
+  phase.textContent = bad ? 'Ping fallido: ' + (result.why || 'sin respuesta.') : 'Ping completado: petición y respuesta recibidas.';
   mk('text', { x: cur[0], y: cur[1] - 6, 'text-anchor': 'middle', style: `fill:${bad ? '#ef4444' : '#22c55e'};font-size:26px;font-weight:800` }, L, bad ? '✕' : '✓');
 }
 
@@ -938,7 +891,12 @@ function pingOutput(src, dst, R) {
 }
 function doPing() {
   const src = $('#psrc').value, dst = $('#pdst').value.trim(), R = sim(src, dst);
-  $('#pout').innerHTML = pingOutput(src, dst, R); animate(R.segs, R.fail, !!R.failReply);
+  $('#ping-route').textContent = `Ping: ${src} (${PCS[src].ip}) → ${dst || '(sin IP de destino)'}`;
+  $('#pout').innerHTML = pingOutput(src, dst, R); animate(R);
+}
+function clearPingResult() {
+  $('#ping-route').textContent = 'Selecciona origen y destino para visualizar un ping.';
+  $('#pout').textContent = 'Aquí verás el resultado del ping y, si falla, el diagnóstico del simulador.';
 }
 
 /* ---- PCs ---- */
@@ -953,136 +911,13 @@ function buildPcs() {
   }
   $('#psrc').innerHTML = Object.keys(PCS).map(k => `<option>${k}</option>`).join('');
 }
-const drawIps = () => { $('#ips').innerHTML = [...Object.values(PCS).map(p => p.ip), ...rifs().map(i => i.ip)].filter(Boolean).map(v => `<option value="${v}">`).join(''); };
-
-/* ---- cambios desde la interfaz gráfica (misma lógica que la CLI) ---- */
-function guiMode(sw, pn, mode) {
-  const p = S[sw].ports[pn]; let note = '';
-  if (mode.startsWith('dynamic') && p.nonego) { p.nonego = false; note = 'Se ha quitado "nonegotiate": no es compatible con los modos dynamic. '; }
-  return note + setMode(sw, pn, mode);
-}
-function guiNative(sw, pn, v) {
-  if (!(v >= 1 && v <= 4094)) return 'La VLAN nativa debe estar entre 1 y 4094';
-  S[sw].ports[pn].native = v;
-  const peer = LINKS[sw + ':' + pn], e = eff(sw, pn);
-  if (peer && peer.t === 'sw' && e.kind === 'trunk') { const q = eff(peer.sw, peer.port); if (q.kind === 'trunk' && q.native !== v) return `%CDP-4-NATIVE_VLAN_MISMATCH: nativa ${v} en ${sw} ${pn} frente a ${q.native} en ${peer.sw} ${peer.port}`; }
-  return '';
-}
-function drawInsp() {
-  const { sw, pn } = SEL, p = S[sw].ports[pn], peer = LINKS[sw + ':' + pn], e = eff(sw, pn);
-  const peerTxt = peer.t === 'pc' ? peer.id : peer.t === 'rtr' ? 'R1 G0/0' : `${peer.sw} ${peer.port}`;
-  const st = e.kind === 'down' ? ['CAÍDO', '#475569'] : e.kind === 'access' ? [`ACCESS · VLAN ${e.vlan}`, vcol(e.vlan)] : [`TRONCAL${e.neg ? ' (negociado por DTP)' : ''}`, '#64748b'];
-  const vl = Object.keys(S[sw].vlans).map(Number); if (!vl.includes(p.access)) vl.push(p.access); vl.sort((a, b) => a - b);
-  const cli = ['interface ' + ifFull(pn), ...ifLines(sw, pn).map(l => ' ' + l)].join('\n');
-  const dyn = p.mode.startsWith('dynamic');
-  $('#insp').innerHTML = `<div><b>${sw} · ${pn}</b> <span style="color:var(--mute)">→ ${peerTxt}</span> <span class="state" style="background:${st[1]};color:#fff">${st[0]}</span></div>
-  <div class="fg">
-   <label>Modo</label><select id="i-mode">${MODES.map(m => `<option value="${m}"${m === p.mode ? ' selected' : ''}>${m}</option>`).join('')}</select>
-   <label>VLAN de acceso</label><select id="i-acc"${p.mode === 'trunk' ? ' disabled' : ''}>${vl.map(v => `<option value="${v}"${v === p.access ? ' selected' : ''}>${v}${S[sw].vlans[v] ? ' · ' + S[sw].vlans[v] : ' (no existe)'}</option>`).join('')}</select>
-   <label>VLAN nativa</label><input type="number" id="i-nat" min="1" max="4094" value="${p.native}"${p.mode === 'access' ? ' disabled' : ''}>
-   <label>VLAN permitidas</label><input type="text" id="i-allow" value="${p.allowed === null ? 'all' : allowedTxt(p.allowed)}"${p.mode === 'access' ? ' disabled' : ''} title="all, none o lista: 10,20,99">
-   <label>Opciones</label><div><label><input type="checkbox" id="i-neg"${p.nonego ? ' checked' : ''}${dyn ? ' disabled' : ''}> nonegotiate</label> &nbsp; <label><input type="checkbox" id="i-shut"${p.shut ? ' checked' : ''}> shutdown</label></div>
-  </div>
-  <div class="msg" id="i-msg">${esc(INS_MSG)}</div>
-  <div style="font-size:.8rem;color:var(--mute)">CLI equivalente de este puerto:</div><pre class="out" style="min-height:0;max-height:140px">${esc(cli)}</pre>`;
-  const set = fn => () => { INS_MSG = fn() || ''; changed(); };
-  $('#i-mode').onchange = set(() => guiMode(sw, pn, $('#i-mode').value));
-  $('#i-acc').onchange = set(() => setAccess(sw, pn, +$('#i-acc').value));
-  $('#i-nat').onchange = set(() => guiNative(sw, pn, +$('#i-nat').value));
-  $('#i-allow').onchange = set(() => {
-    const v = $('#i-allow').value.trim().toLowerCase();
-    if (v === 'all') return setAllowed(sw, pn, 'all'); if (v === 'none') return setAllowed(sw, pn, 'none');
-    const l = parseVlanList(v); if (!l) return 'Lista no válida (ejemplo: 10,20,99)'; setAllowed(sw, pn, 'set', l);
-  });
-  $('#i-neg').onchange = set(() => setNonego(sw, pn, $('#i-neg').checked));
-  $('#i-shut').onchange = set(() => { p.shut = $('#i-shut').checked; });
-}
-
-/* ---- base de datos VLAN ---- */
-function buildVdb() {
-  $('#vdb').innerHTML = ['S1', 'S2'].map(sw => `<div data-sw="${sw}"><b>${sw}</b><div class="tbl"></div>
-   <form><input type="number" placeholder="ID" min="2" max="4094" required><input type="text" placeholder="nombre"><button class="primary">+ Crear</button></form><div class="msg"></div></div>`).join('');
-  $('#vdb').querySelectorAll('form').forEach(f => f.addEventListener('submit', ev => {
-    ev.preventDefault(); const box = f.parentNode, sw = box.dataset.sw, v = +f.querySelector('input[type=number]').value, nm = f.querySelector('input[type=text]').value.trim().replace(/\s+/g, '_');
-    if (v < 2 || v > 4094 || (v >= 1002 && v <= 1005)) { box.querySelector('.msg').textContent = 'ID no válido (2-4094; 1002-1005 reservadas)'; return; }
-    mkVlan(sw, v, nm || undefined); f.reset(); changed();
-  }));
-  $('#vdb').addEventListener('click', ev => { const b = ev.target.closest('[data-del]'); if (!b) return; delete S[b.closest('[data-sw]').dataset.sw].vlans[+b.dataset.del]; changed(); });
-}
-function drawVdb() {
-  ['S1', 'S2'].forEach(sw => {
-    const rows = Object.keys(S[sw].vlans).map(Number).sort((a, b) => a - b).map(v => {
-      const ps = PORT_ORDER.filter(pn => { const e = eff(sw, pn, true); return e.kind === 'access' && e.vlan === v; });
-      const shown = ps.length > 4 ? ps.slice(0, 3).join(', ') + ` … (${ps.length})` : ps.join(', ');
-      return `<tr><td style="color:${vcol(v)};font-weight:700">${v}</td><td>${esc(S[sw].vlans[v])}</td><td class="mono" style="font-size:.75rem">${shown}</td><td>${v === 1 ? '' : `<button data-del="${v}" title="no vlan ${v}" style="padding:0 6px">✕</button>`}</td></tr>`;
-    }).join('');
-    $(`#vdb [data-sw="${sw}"] .tbl`).innerHTML = `<table class="vt"><tr><th>VLAN</th><th>Nombre</th><th>Puertos access</th><th></th></tr>${rows}</table>`;
-  });
-}
-
-/* ---- editor de bits 802.1Q ---- */
-const PCPN = ['0 · Best effort (por defecto)', '1 · Background', '2 · Excellent effort', '3 · Critical apps', '4 · Vídeo', '5 · Voz', '6 · Internetwork control', '7 · Network control'];
-function buildBits() {
-  const box = $('#bits'); box.innerHTML = '';
-  const grp = (label, color, bits, fixed, wts) => {
-    const g = document.createElement('div'); g.className = 'grp';
-    g.innerHTML = `<div class="gl" style="color:${color}">${label}</div><div class="row2"></div><div class="row2"></div>`;
-    bits.forEach((b, k) => {
-      const btn = document.createElement('button'); btn.className = 'bit' + (fixed ? ' fix' : ''); btn.style.background = fixed ? '' : color;
-      if (fixed) btn.textContent = b; else btn.dataset.b = b;
-      g.children[1].appendChild(btn); const w = document.createElement('div'); w.className = 'wt'; w.textContent = wts ? wts[k] : ''; g.children[2].appendChild(w);
-    }); box.appendChild(g);
-  };
-  grp('TPID = 0x8100 (fijo, 16 bits)', '#818cf8', '1000000100000000'.split(''), true);
-  box.insertAdjacentHTML('beforeend', '<div style="flex-basis:100%"></div>');
-  grp('PCP · 3 bits', '#ec4899', [15, 14, 13], false, [4, 2, 1]); grp('DEI · 1', '#f97316', [12], false, [1]);
-  grp('VID · 12 bits (nº de VLAN)', '#3b82f6', [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0], false, [2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1]);
-  box.addEventListener('click', ev => { const b = ev.target.closest('[data-b]'); if (!b) return; TAG ^= 1 << +b.dataset.b; changed(); });
-  $('#vidn').addEventListener('change', () => { const v = Math.max(0, Math.min(4095, +$('#vidn').value || 0)); TAG = (TAG & 0xF000) | v; changed(); });
-  document.querySelectorAll('[data-tp]').forEach(b => b.addEventListener('click', () => { const k = b.dataset.tp; TAG = k === '10' ? 10 : k === '99' ? 99 : k === '20v' ? (5 << 13) | 20 : 0; changed(); }));
-}
-const vidInfo = v => v === 0 ? 'VID 0: "solo prioridad" (sin VLAN)' : v === 4095 ? 'VID 4095: reservado, no se puede usar' : v === 1 ? 'VLAN 1: la VLAN por defecto (nativa por defecto)' : v >= 1002 && v <= 1005 ? 'VLAN 1002-1005: reservadas (FDDI / Token Ring)' : v <= 1001 ? 'VLAN de rango normal (1-1001)' : 'VLAN de rango extendido (1006-4094)';
-function tagEffect(v) {
-  const ea = eff('S1', 'Gi0/2'), eb = eff('S2', 'Gi0/1');
-  if (v === 0 || v === 4095) return ['#ef4444', `Con VID ${v} la trama no pertenece a ninguna VLAN utilizable: no sirve para separar redes.`];
-  if (ea.kind !== 'trunk' || eb.kind !== 'trunk') return ['#ef4444', 'El enlace S1–S2 no es un troncal ahora mismo: una trama con etiqueta no lo atravesaría (configura el troncal en la misión 3).'];
-  if (v === ea.native) return ['#a855f7', `La VLAN ${v} es la nativa de S1: sale SIN etiqueta (el VID no viaja por el cable)` + (eb.native !== v ? ` y en S2 caería en la VLAN nativa ${eb.native}.` : '.')];
-  if (!aHas(ea.allowed, v)) return ['#ef4444', `S1 Gi0/2 no permite la VLAN ${v} (allowed vlan): se descarta.`];
-  if (!aHas(eb.allowed, v)) return ['#ef4444', `S2 Gi0/1 no permite la VLAN ${v} (allowed vlan): se descarta al entrar.`];
-  if (!S.S1.vlans[v] || !S.S2.vlans[v]) return ['#ef4444', `La VLAN ${v} no existe en ${!S.S1.vlans[v] ? 'S1' : 'S2'}: se descarta.`];
-  return [vcol(v), `✔ Cruza el troncal S1 → S2 etiquetada con VID ${v}.`];
-}
-function drawTag() {
-  const pcp = (TAG >> 13) & 7, dei = (TAG >> 12) & 1, vid = TAG & 0xFFF;
-  document.querySelectorAll('#bits [data-b]').forEach(b => { const on = (TAG >> +b.dataset.b) & 1; b.textContent = on; b.classList.toggle('off', !on); });
-  $('#vidn').value = vid;
-  $('#tagkv').innerHTML = `<b>PCP</b><span>${pcp} · ${PCPN[pcp]}</span><b>DEI</b><span>${dei}${dei ? ' · elegible para descarte' : ' · no descartable'}</span><b>VID</b><span>${vid} · ${vidInfo(vid)}</span><b>TCI</b><span class="mono">0x${TAG.toString(16).padStart(4, '0').toUpperCase()}</span><b>Etiqueta completa</b><span class="mono">0x8100${TAG.toString(16).padStart(4, '0').toUpperCase()}</span>`;
-  const [c, t] = tagEffect(vid); $('#tageff').style.borderColor = c; $('#tageff').textContent = t;
-}
-
-/* ---- DTP ---- */
-function buildDtp() {
-  $('#dtpA').innerHTML = $('#dtpB').innerHTML = MODES.map(m => `<option>${m}</option>`).join('');
-  [['A', 'S1', 'Gi0/2'], ['B', 'S2', 'Gi0/1']].forEach(([k, sw, pn]) => {
-    $('#dtp' + k).onchange = () => { INS_MSG = guiMode(sw, pn, $('#dtp' + k).value); changed(); };
-    $('#dtp' + k + 'n').onchange = () => { INS_MSG = setNonego(sw, pn, $('#dtp' + k + 'n').checked); changed(); };
-  });
-}
-function drawDtp() {
-  const a = S.S1.ports['Gi0/2'], b = S.S2.ports['Gi0/1'];
-  $('#dtpA').value = a.mode; $('#dtpB').value = b.mode; $('#dtpAn').checked = a.nonego; $('#dtpBn').checked = b.nonego;
-  $('#dtpAn').disabled = a.mode.startsWith('dynamic'); $('#dtpBn').disabled = b.mode.startsWith('dynamic');
-  const ea = eff('S1', 'Gi0/2'), eb = eff('S2', 'Gi0/1');
-  const r = $('#dtpres');
-  if (ea.kind === 'down' || eb.kind === 'down') { r.style.borderColor = '#ef4444'; r.innerHTML = '⛔ Enlace caído (puerto en shutdown).'; }
-  else if (ea.kind === 'trunk' && eb.kind === 'trunk') { r.style.borderColor = '#22c55e'; r.innerHTML = `✔ <b>TRONCAL</b> ${ea.neg || eb.neg ? 'formado por negociación DTP' : 'fijo (mode trunk en ambos extremos)'}.`; }
-  else if (ea.kind === 'access' && eb.kind === 'access') { r.style.borderColor = '#3b82f6'; r.innerHTML = `Enlace <b>ACCESS</b> (VLAN ${ea.vlan} / ${eb.vlan}): no hay troncal.` + ((a.nonego || b.nonego) ? ' <i>nonegotiate corta la negociación.</i>' : ''); }
-  else { r.style.borderColor = '#ef4444'; r.innerHTML = '⚠ <b>DESAJUSTE</b>: un extremo es troncal y el otro access. Solo pasarían tramas sin etiqueta.'; }
-  let h = '<table class="dtp"><tr><th>S1 ↓ / S2 →</th>' + MODES.map(m => `<th>${m.replace('dynamic ', 'dyn. ')}</th>`).join('') + '</tr>';
-  MODES.forEach(x => {
-    h += `<tr><th>${x.replace('dynamic ', 'dyn. ')}</th>` + MODES.map(y => { const rs = dtpPair(x, y); return `<td class="${rs === 'trunk' ? 't' : rs === 'access' ? 'a' : 'm'}${x === a.mode && y === b.mode ? ' cur' : ''}">${rs === 'trunk' ? 'TRUNK' : rs === 'access' ? 'access' : '⚠'}</td>`; }).join('') + '</tr>';
-  });
-  $('#dtpmx').innerHTML = h + '</table>';
+function drawIps() {
+  const select = $('#pdest'), previous = select.value;
+  const options = Object.entries(PCS).map(([id, pc]) => ({ id, ip: pc.ip }))
+    .concat(rifs().map(i => ({ id: 'R1 ' + i.name, ip: i.ip }))).filter(i => i.ip);
+  select.innerHTML = '<option value="">Otra IP</option>' + options.map(i => `<option value="${esc(i.id)}">${esc(i.id)} · ${esc(i.ip)}</option>`).join('');
+  select.value = options.some(i => i.id === previous) ? previous : '';
+  if (select.value) $('#pdst').value = options.find(i => i.id === select.value).ip;
 }
 
 /* ---- misiones ---- */
@@ -1101,19 +936,96 @@ const SOLVED = {
     'interface g0/0.20', 'encapsulation dot1Q 20', 'ip address 192.168.20.1 255.255.255.0', 'end']
 };
 function applySolved() { for (const d in SOLVED) runScript(d, SOLVED[d]); }
+function solutionScripts(index) {
+  const sw = {};
+  for (const name of ['S1', 'S2']) {
+    const trunk = name === 'S1' ? 'gi0/2' : 'gi0/1';
+    const lines = ['configure terminal', 'vlan 10', 'name VENTAS', 'vlan 20', 'name ADMIN', 'vlan 99', 'name NATIVA'];
+    if (index >= 1) {
+      for (const [port, vlan] of [['fa0/1', 10], ['fa0/2', 20]]) {
+        lines.push('interface ' + port, 'switchport mode access', 'switchport access vlan ' + vlan, 'no shutdown');
+      }
+    }
+    if (index >= 2) {
+      lines.push('interface ' + trunk, 'switchport mode trunk', 'no shutdown',
+        'switchport trunk native vlan ' + (index >= 3 ? 99 : 1),
+        index >= 4 ? 'switchport trunk allowed vlan 10,20,99' : 'switchport trunk allowed vlan all');
+    }
+    if (index >= 5 && name === 'S1') {
+      lines.push('interface gi0/1', 'switchport mode trunk', 'no shutdown',
+        'switchport trunk native vlan 1', 'switchport trunk allowed vlan all');
+    }
+    lines.push('end'); sw[name] = lines;
+  }
+  if (index >= 5) {
+    const lines = ['configure terminal'];
+    const interfaces = { ...S.R1.ifs, ...S.R1.subs };
+    for (const [name, iface] of Object.entries(interfaces)) {
+      const target = name === 'G0/0.10' || name === 'G0/0.20';
+      const overlap = iface.ip && ['192.168.10.1', '192.168.20.1'].some(ip =>
+        sameNet(ip, iface.ip, iface.mask) && sameNet(iface.ip, ip, '255.255.255.0'));
+      if (target || overlap) lines.push('interface ' + name, 'no ip address');
+      if (!target && S.R1.subs[name] && (iface.vid === 10 || iface.vid === 20)) {
+        lines.push('interface ' + name, 'shutdown');
+      }
+    }
+    lines.push('interface g0/0', 'no shutdown',
+      'interface g0/0.10', 'encapsulation dot1Q 10', 'ip address 192.168.10.1 255.255.255.0', 'no shutdown',
+      'interface g0/0.20', 'encapsulation dot1Q 20', 'ip address 192.168.20.1 255.255.255.0', 'no shutdown', 'end');
+    sw.R1 = lines;
+  }
+  return sw;
+}
+function applyMission(index) {
+  const status = $('#solution-status');
+  status.textContent = '';
+  const scripts = solutionScripts(index);
+  for (const [device, lines] of Object.entries(scripts)) {
+    const result = runScript(device, lines);
+    P(T.ses[device], `[Laboratorio] Comandos aplicados para la misión ${index + 1}:`, 'lab');
+    result.out.forEach(entry => P(T.ses[device], entry.t, entry.c));
+    if (result.out.some(entry => entry.c === 'err')) {
+      status.textContent = `No se pudo aplicar la solución en ${device}. Revisa la terminal de ese equipo.`;
+      clearPkt(); refresh(); renderTerm();
+      return;
+    }
+  }
+  if (index >= 2) {
+    for (const [id, octet, host] of [['PC1', 10, 11], ['PC2', 20, 11], ['PC3', 10, 12], ['PC4', 20, 12]]) {
+      Object.assign(PCS[id], { ip: `192.168.${octet}.${host}`, mask: '255.255.255.0', gw: `192.168.${octet}.1` });
+      P(T.ses[T.cur], `[Laboratorio] ${id}: IP ${PCS[id].ip}, máscara ${PCS[id].mask}, gateway ${PCS[id].gw}`, 'info');
+    }
+    const source = $('#psrc').value;
+    buildPcs(); $('#psrc').value = source;
+  }
+  clearPingResult(); clearPkt();
+  const challengeWasActive = CHAL;
+  CHAL = false;
+  refresh();
+  CHAL = challengeWasActive || index === MISSIONS.length - 1;
+  refresh();
+  const pending = MISSIONS.slice(0, index + 1).flatMap((m, i) => m.chk().filter(c => !c[1]).map(c => `Misión ${i + 1}: ${c[0]}`));
+  if (pending.length) {
+    status.textContent = `No se ha completado la solución: ${pending.join('; ')}. Revisa las terminales.`;
+  } else {
+    status.textContent = `Solución de la misión ${index + 1} y requisitos anteriores aplicados. Puedes continuar manualmente.`;
+  }
+  renderTerm();
+}
 function loadChallenge() {
-  const keep = new Set(DONE), tag = TAG;
-  freshState(); DONE = keep; TAG = tag; CHAL = true; applySolved();
+  const keep = new Set(DONE);
+  freshState(); DONE = keep; CHAL = true; applySolved();
   S.S2.ports['Fa0/1'].access = 20; S.S2.ports['Gi0/1'].allowed = new Set([10, 99]); S.S2.ports['Gi0/1'].native = 1;
   S.R1.subs['G0/0.20'].vid = 30; PCS.PC4.gw = '192.168.20.254';
   initSessions(); P(T.ses.S1, '[Laboratorio] Escenario averiado cargado: hay 5 fallos repartidos entre S1, S2, R1 y un PC. ¡Encuéntralos!', 'lab');
-  buildPcs(); clearPkt(); renderTerm(); changed();
+  $('#solution-status').textContent = '';
+  buildPcs(); clearPingResult(); clearPkt(); renderTerm(); changed();
 }
 const MISSIONS = [
   { t: 'Crea las VLAN 10, 20 y 99 en S1 y S2', d: 'Cada switch tiene su propia base de datos de VLAN. Créalas con nombre descriptivo (no vale el nombre por defecto).', hint: 'En modo configuración: vlan 10 → name VENTAS. Repite en S2.',
     sol: 'vlan 10\n name VENTAS\nvlan 20\n name ADMIN\nvlan 99\n name NATIVA\n(en S1 y en S2)',
     chk: () => ['S1', 'S2'].flatMap(sw => [10, 20, 99].map(v => [`${sw}: VLAN ${v} creada con nombre`, vlanOk(sw, v)])) },
-  { t: 'Puertos de acceso', d: 'PC1 y PC3 en la VLAN 10; PC2 y PC4 en la VLAN 20. Usa modo access.', hint: 'interface fa0/1 → switchport mode access → switchport access vlan 10. Fíjate en la lista de puertos del inspector.',
+  { t: 'Puertos de acceso', d: 'PC1 y PC3 en la VLAN 10 (azul); PC2 y PC4 en la VLAN 20 (verde). Usa modo access y comprueba los colores en la red.', hint: 'En cada switch: interface fa0/1 → switchport mode access → switchport access vlan 10. Usa fa0/2 y VLAN 20 para los otros PC.',
     sol: 'S1: interface fa0/1\n switchport mode access\n switchport access vlan 10\n interface fa0/2\n switchport mode access\n switchport access vlan 20\nS2: igual (Fa0/1 → 10, Fa0/2 → 20)',
     chk: () => [['S1', 'Fa0/1', 10], ['S1', 'Fa0/2', 20], ['S2', 'Fa0/1', 10], ['S2', 'Fa0/2', 20]].map(([sw, pn, v]) => [`${sw} ${pn}: access VLAN ${v}`, P_(sw, pn).mode === 'access' && P_(sw, pn).access === v]) },
   { t: 'Troncal entre S1 y S2', d: 'Que PC1↔PC3 (VLAN 10) y PC2↔PC4 (VLAN 20) se hagan ping a través de un único cable troncal (S1 Gi0/2 ↔ S2 Gi0/1).', hint: 'El enlace está en dynamic auto en los dos lados y no negocian. Pon un extremo en trunk (mejor los dos).',
@@ -1130,16 +1042,6 @@ const MISSIONS = [
     chk: () => { const s = n => S.R1.subs[n]; return [['S1 Gi0/1 es troncal hacia el router', isTr('S1', 'Gi0/1')], ['R1 G0/0 activa (no shutdown)', !S.R1.ifs['G0/0'].shut],
       ['g0/0.10: dot1Q 10 + 192.168.10.1/24', !!s('G0/0.10') && s('G0/0.10').vid === 10 && s('G0/0.10').ip === '192.168.10.1'], ['g0/0.20: dot1Q 20 + 192.168.20.1/24', !!s('G0/0.20') && s('G0/0.20').vid === 20 && s('G0/0.20').ip === '192.168.20.1'],
       ['PC1 alcanza su gateway 192.168.10.1', sim('PC1', '192.168.10.1').ok], ['PC1 ↔ PC4 (entre VLAN, pasando por R1)', ping2('PC1', 'PC4')]]; } },
-  { t: 'DTP: forma el troncal por negociación', d: 'Quita el "mode trunk" fijo del enlace S1–S2: deja un extremo en dynamic desirable y el otro en dynamic auto, y comprueba que el troncal se forma solo.', hint: 'En un puerto "no switchport nonegotiate" si lo hubieras puesto. Luego switchport mode dynamic desirable / dynamic auto. Pruébalo con el panel DTP.',
-    sol: 'S1: interface gi0/2\n switchport mode dynamic desirable\nS2: interface gi0/1\n switchport mode dynamic auto\n(show interfaces trunk → Mode desirable/auto, n-802.1q)',
-    chk: () => { const a = P_('S1', 'Gi0/2').mode, b = P_('S2', 'Gi0/1').mode; return [['Los dos extremos en modo dynamic', a.startsWith('dynamic') && b.startsWith('dynamic')], ['Al menos uno en dynamic desirable', a === 'dynamic desirable' || b === 'dynamic desirable'], ['El troncal se forma por DTP', isTr('S1', 'Gi0/2') && isTr('S2', 'Gi0/1')], ['PC1 ↔ PC3 siguen comunicando', ping2('PC1', 'PC3')]]; } },
-  { t: 'Endurece: troncales fijos + nonegotiate', d: 'En producción no se deja DTP activo: pon mode trunk y switchport nonegotiate en S1 Gi0/2, S2 Gi0/1 y S1 Gi0/1 (hacia el router). Todo debe seguir funcionando.', hint: 'nonegotiate solo se admite con mode trunk o access (no con dynamic). Primero el modo y luego nonegotiate.',
-    sol: 'interface gi0/2   (S1)\n switchport mode trunk\n switchport nonegotiate\ninterface gi0/1   (S2)\n switchport mode trunk\n switchport nonegotiate\ninterface gi0/1   (S1)\n switchport mode trunk\n switchport nonegotiate',
-    chk: () => [['S1 Gi0/2', 'S1', 'Gi0/2'], ['S2 Gi0/1', 'S2', 'Gi0/1'], ['S1 Gi0/1 (router)', 'S1', 'Gi0/1']].map(([l, sw, pn]) => [`${l}: mode trunk + nonegotiate`, P_(sw, pn).mode === 'trunk' && P_(sw, pn).nonego]).concat([['PC1 ↔ PC3 y PC1 ↔ PC4 funcionan', ping2('PC1', 'PC3') && ping2('PC1', 'PC4')]]) },
-  { t: 'Bits de la etiqueta: VLAN 20 con prioridad de voz', free: true, d: 'En el editor de bits construye una etiqueta con VID = 20, PCP = 5 (voz) y DEI = 0.', hint: 'VID 20 = 16 + 4 → bits 16 y 4 activados. PCP 5 = 101 en binario (pesos 4 y 1).', sol: 'PCP = 101 · DEI = 0 · VID = 000000010100\n(botón "VLAN 20 voz (PCP 5)")',
-    chk: () => [['VID = 20', (TAG & 0xFFF) === 20], ['PCP = 5', ((TAG >> 13) & 7) === 5], ['DEI = 0', ((TAG >> 12) & 1) === 0]] },
-  { t: 'Bits de la etiqueta: el VID más alto utilizable', free: true, d: 'Pon el VID máximo que se puede asignar a una VLAN (el 4095 está reservado) con PCP = 0 y DEI = 0.', hint: '12 bits dan 0-4095. El máximo utilizable es una unidad menos.', sol: 'VID = 111111111110 (4094) · PCP = 000 · DEI = 0',
-    chk: () => [['VID = 4094', (TAG & 0xFFF) === 4094], ['PCP = 0', ((TAG >> 13) & 7) === 0], ['DEI = 0', ((TAG >> 12) & 1) === 0]] },
   { t: 'Reto final: repara la red averiada', d: 'Carga el escenario averiado: la red estaba bien configurada pero alguien ha tocado 5 cosas. Usa los show de la terminal y el ping para encontrarlas y arreglarlas.', chal: true, hint: 'show vlan brief (S2), show interfaces trunk (S1 y S2), show ip interface brief y show running-config (R1), y las IP de los PCs.',
     sol: 'S2 Fa0/1 → switchport access vlan 10\nS2 Gi0/1 → switchport trunk allowed vlan add 20\nS2 Gi0/1 → switchport trunk native vlan 99\nR1 g0/0.20 → encapsulation dot1Q 20\nPC4 → gateway 192.168.20.1',
     chk: () => CHAL ? [['PC3 (S2 Fa0/1) está en la VLAN 10', P_('S2', 'Fa0/1').access === 10], ['S2 Gi0/1 permite la VLAN 20', aHas(P_('S2', 'Gi0/1').allowed, 20)], ['La VLAN nativa coincide en ambos extremos', P_('S1', 'Gi0/2').native === P_('S2', 'Gi0/1').native],
@@ -1158,8 +1060,8 @@ function drawMissions() {
     const done = DONE.has(i), open = OPEN.has(i);
     const body = open ? `<div class="mb">${esc(m.d)}<ul>${m._c.map(c => `<li class="${c[1] ? 'ok' : 'ko'}">${c[1] ? '✔' : '✘'} ${esc(c[0])}</li>`).join('')}</ul>
       ${m.chal && !CHAL ? '<button class="primary" data-act="chal">Cargar escenario averiado</button> ' : ''}${m.chal && CHAL ? '<button data-act="chal">↺ Volver a cargar el escenario</button> ' : ''}
-      <button data-sol="${i}">${SOL.has(i) ? 'Ocultar' : 'Pista / solución'}</button>${SOL.has(i) ? `<div style="margin-top:5px;color:#fbbf24">💡 ${esc(m.hint)}</div><pre class="sol">${esc(m.sol)}</pre>` : ''}</div>` : '';
-    return `<div class="ms${done ? ' done' : ''}"><div class="mh" data-m="${i}"><span class="n">${done ? '✔' : i + 1}</span>${esc(m.t)}<span class="tag">${done ? 'completada' : m._c.filter(c => c[1]).length + '/' + m._c.length}</span></div>${body}</div>`;
+      <button data-sol="${i}">${SOL.has(i) ? 'Ocultar' : 'Pista / solución'}</button>${SOL.has(i) ? `<div style="margin-top:5px;color:#fbbf24">💡 ${esc(m.hint)}</div><pre class="sol">${esc(m.sol)}</pre><p>Aplicar también corrige los requisitos anteriores y, desde la misión 3, restablece las direcciones de los PC.${i >= 5 ? ' Puede quitar IP en conflicto o desactivar otras subinterfaces del router.' : ''}${m.chal && !CHAL ? ' También da por iniciado el reto y aplica su reparación.' : ''} Los comandos ejecutados aparecen en la terminal de cada equipo.</p><button class="primary" data-apply="${i}">Aplicar comandos</button>` : ''}</div>` : '';
+    return `<div class="ms${done ? ' done' : ''}"><button type="button" class="mh" data-m="${i}" aria-expanded="${open}"><span class="n">${done ? '✔' : i + 1}</span>${esc(m.t)}<span class="tag">${done ? 'completada' : m._c.filter(c => c[1]).length + '/' + m._c.length}</span></button>${body}</div>`;
   }).join('');
   const k = MISSIONS.findIndex((m, i) => !DONE.has(i));
   $('#curm').innerHTML = k < 0 ? '🎉 <b>¡Has completado todas las misiones!</b>' : `<b>Misión ${k + 1}:</b> ${esc(MISSIONS[k].t)} — falta: <span style="color:#fca5a5">${esc((MISSIONS[k]._c.find(c => !c[1]) || ['—'])[0])}</span>`;
@@ -1169,7 +1071,7 @@ function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.ad
 
 /* ---- orquestación ---- */
 function refresh() {
-  drawTopo(); drawInsp(); drawVdb(); drawDtp(); drawTag(); drawIps();
+  drawTopo(); drawIps();
   const newly = evalMissions();
   newly.forEach(i => { OPEN.delete(i); const k = MISSIONS.findIndex((m, j) => !DONE.has(j)); if (k >= 0) OPEN.add(k); toast(`🎉 ¡Misión ${i + 1} completada! ${MISSIONS[i].t}`); });
   drawMissions(); return newly;
@@ -1184,15 +1086,41 @@ function submit() {
   renderTerm();
 }
 function resetAll() {
-  freshState(); initSessions(); SEL = { sw: 'S1', pn: 'Gi0/2' }; INS_MSG = ''; OPEN = new Set([0]); SOL = new Set(); T.cur = 'S1';
+  freshState(); initSessions(); OPEN = new Set([0]); SOL = new Set(); T.cur = 'S1';
+  $('#solution-status').textContent = '';
   document.querySelectorAll('#tabs [data-dev]').forEach(b => b.classList.toggle('act', b.dataset.dev === 'S1'));
-  buildPcs(); $('#pdst').value = '192.168.10.12'; $('#pout').textContent = 'Aquí verás el resultado del ping y, si falla, el diagnóstico del simulador.';
+  buildPcs(); $('#pdest').value = ''; $('#pdst').value = '192.168.10.12'; clearPingResult();
   clearPkt(); refresh(); renderTerm();
 }
+function initFullscreen() {
+  const button = $('#fullscreen-toggle'), status = $('#fullscreen-status');
+  const update = () => {
+    const active = document.fullscreenElement === document.documentElement;
+    button.textContent = active ? '⛶ Salir de pantalla completa' : '⛶ Pantalla completa';
+    button.setAttribute('aria-pressed', String(active));
+  };
+  if (!document.fullscreenEnabled || !document.documentElement.requestFullscreen) {
+    button.disabled = true;
+    status.textContent = 'La pantalla completa no está disponible en este navegador.';
+    return;
+  }
+  document.addEventListener('fullscreenchange', update);
+  button.addEventListener('click', async () => {
+    status.textContent = '';
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await document.documentElement.requestFullscreen();
+    } catch (error) {
+      console.error('No se pudo cambiar el modo de pantalla completa:', error);
+      status.textContent = 'No se pudo cambiar a pantalla completa. Comprueba los permisos del navegador.';
+    }
+  });
+}
 function init() {
-  freshState(); initSessions(); buildTopo(); buildPcs(); buildVdb(); buildBits(); buildDtp();
-  $('#helptxt').textContent = HELP;
+  freshState(); initSessions(); buildTopo(); buildPcs(); initFullscreen();
   $('#pgo').onclick = doPing; $('#pdst').addEventListener('keydown', e => { if (e.key === 'Enter') doPing(); });
+  $('#pdest').onchange = drawIps;
+  $('#pdst').addEventListener('input', () => { $('#pdest').value = ''; });
   $('#spd').onchange = () => { SPEED = +$('#spd').value; };
   $('#reset').onclick = resetAll;
   $('#tabs').addEventListener('click', ev => {
@@ -1210,15 +1138,16 @@ function init() {
   });
   $('#term').addEventListener('click', () => { if (!getSelection().toString()) $('#cmd').focus(); });
   $('#mlist').addEventListener('click', ev => {
-    const h = ev.target.closest('[data-m]'), s = ev.target.closest('[data-sol]'), a = ev.target.closest('[data-act]');
+    const h = ev.target.closest('[data-m]'), s = ev.target.closest('[data-sol]'), a = ev.target.closest('[data-act]'), apply = ev.target.closest('[data-apply]');
+    if (apply) { applyMission(+apply.dataset.apply); $('#solution-status').focus(); return; }
     if (a) { loadChallenge(); return; }
-    if (s) { const i = +s.dataset.sol; SOL.has(i) ? SOL.delete(i) : SOL.add(i); drawMissions(); return; }
-    if (h) { const i = +h.dataset.m; OPEN.has(i) ? OPEN.delete(i) : OPEN.add(i); drawMissions(); }
+    if (s) { const i = +s.dataset.sol; SOL.has(i) ? SOL.delete(i) : SOL.add(i); drawMissions(); $(`[data-sol="${i}"]`).focus(); return; }
+    if (h) { const i = +h.dataset.m; OPEN.has(i) ? OPEN.delete(i) : OPEN.add(i); drawMissions(); $(`[data-m="${i}"]`).focus(); }
   });
   refresh(); renderTerm();
 }
 document.addEventListener('DOMContentLoaded', init);
-window.LAB = { get S() { return S; }, get PCS() { return PCS; }, sim, simRtr, exec, runScript, newSes, applySolved, loadChallenge, evalMissions, MISSIONS, get DONE() { return DONE; }, refresh, resetAll, get TAG() { return TAG; }, set TAG(v) { TAG = v; }, eff, animate };
+window.LAB = { get S() { return S; }, get PCS() { return PCS; }, sim, simRtr, exec, runScript, newSes, applySolved, loadChallenge, evalMissions, MISSIONS, get DONE() { return DONE; }, refresh, resetAll, eff, animate };
 </script>
 </body>
 </html>
