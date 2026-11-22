@@ -8,6 +8,9 @@ code{background:#0d1626;border:1px solid var(--line);border-radius:5px;padding:1
 header.hero{padding:44px 20px 28px;text-align:center;background:linear-gradient(160deg,#10203d,#0b1220 60%)}
 header.hero h1{margin:0 0 8px;font-size:2.3rem;letter-spacing:.5px}
 header.hero p{margin:0 auto;max-width:780px;color:var(--mute)}
+.ai-declaration{display:flex;align-items:center;gap:14px;max-width:780px;margin:20px auto 0;padding:12px 14px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.ai-declaration img{width:36px;height:auto;flex:none}
+header.hero .ai-declaration p{margin:0;color:var(--ink);font-size:.9rem}
 nav{position:sticky;top:0;z-index:20;background:#0b1220ee;backdrop-filter:blur(6px);border-bottom:1px solid var(--line);
  display:flex;gap:4px;flex-wrap:wrap;justify-content:center;padding:8px}
 nav a{color:var(--ink);text-decoration:none;padding:5px 11px;border-radius:999px;font-size:.88rem;border:1px solid transparent}
