@@ -15,6 +15,7 @@ function S(tag, attrs, parent, text) {
   if (parent) parent.appendChild(e);
   return e;
 }
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
 const lerp = (a, b, t) => a + (b - a) * t;
 const ease = p => (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
 
@@ -38,6 +39,10 @@ class Anim {
   }
   /* mueve un <g> a lo largo de una poligonal */
   move(node, pts, ms) {
+    // Movimiento reducido: el paquete salta de punto en punto en lugar de desplazarse.
+    if (REDUCED.matches && !this.fast) {
+      return pts.reduce((p, [x, y]) => p.then(() => { node.setAttribute('transform', `translate(${x},${y})`); return this.sleep(220); }), Promise.resolve());
+    }
     const seg = []; let total = 0;
     for (let i = 1; i < pts.length; i++) {
       const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
@@ -82,7 +87,7 @@ class Player {
           <select><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
         </label>
       </div>
-      <div class="caption"><div class="stepno"></div><h4></h4><div class="txt"></div></div>`;
+      <div class="caption"><div class="stepno"></div><h3></h3><div class="txt"></div></div>`;
     this.stage = root.querySelector('.stage');
     this.btn = {};
     root.querySelectorAll('button[data-a]').forEach(b => this.btn[b.dataset.a] = b);
@@ -112,7 +117,7 @@ class Player {
   cap(i) {
     const s = this.scene.steps[i], c = this.root.querySelector('.caption');
     c.querySelector('.stepno').textContent = `Paso ${i + 1} de ${this.scene.steps.length}`;
-    c.querySelector('h4').textContent = s.t;
+    c.querySelector('h3').textContent = s.t;
     c.querySelector('.txt').innerHTML = s.h;
   }
   ui() {

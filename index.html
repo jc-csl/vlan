@@ -8,10 +8,10 @@
 </head>
 <body>
 <header class="hero" id="inicio">
-  <div class="hero-kicker">REDES · GUÍA INTERACTIVA</div>
   <h1>VLAN · Apuntes visuales</h1>
   <p>Cómo <b>un switch</b> se convierte en varios y <b>un cable</b> en varios, qué hace la <b>etiqueta 802.1Q</b>, qué es la <b>VLAN nativa</b> y los <b>comandos Cisco</b> para configurarlo todo. Cada animación se avanza paso a paso con <i>Siguiente ▶</i>.</p>
   <p class="web-online" style="margin:1em auto 0;font-size:.95rem">🌐 Versión online (GitHub Pages): <a href="https://jc-csl.github.io/vlan/" style="color:#f3b183;font-weight:700">jc-csl.github.io/vlan</a></p>
+  <p class="web-local" style="margin:.5em auto 0;font-size:.95rem;overflow-wrap:anywhere">💻 Copia local del proyecto: <code>git clone https://github.com/jc-csl/vlan.git</code> y abre <code>index.html</code></p>
   <div class="ai-declaration">
     <img src="semaforo-verde.png" alt="Semáforo verde">
     <p><b>Declaración de uso de IA.</b> Estos apuntes sobre VLAN se basan en materiales del profesorado. Se ha utilizado inteligencia artificial como apoyo en la maquetación, las pruebas y la generación de animaciones. El contenido ha sido revisado y validado por el profesorado.</p>
@@ -171,14 +171,14 @@ S2# show vtp status</pre></div>
 <section id="resumen">
   <h2>10 · Resumen y buenas prácticas</h2>
   <div class="cards">
-    <div class="card"><h4>🧠 Ideas clave</h4><ul>
+    <div class="card"><h3>🧠 Ideas clave</h3><ul>
       <li>VLAN = switch virtual = dominio de broadcast = subred.</li>
       <li>Access: sin etiqueta, 1 VLAN. Troncal: con etiqueta, varias VLAN.</li>
       <li>El switch etiqueta al entrar a un troncal y desetiqueta al salir por access.</li>
       <li>VLAN nativa = tramas sin etiqueta; igual en ambos extremos.</li>
       <li>Entre VLAN hace falta capa 3 (subinterfaces o switch L3).</li>
     </ul></div>
-    <div class="card"><h4>✅ Buenas prácticas</h4><ul>
+    <div class="card"><h3>✅ Buenas prácticas</h3><ul>
       <li>Nombres descriptivos y documentar el plan de VLAN.</li>
       <li>Una VLAN por grupo/departamento.</li>
       <li>No usar la VLAN 1 para usuarios; nativa dedicada (99).</li>
@@ -201,7 +201,7 @@ S2# show vtp status</pre></div>
 <section id="lab">
   <h2>11 · Ponlo en práctica: laboratorio interactivo</h2>
   <p class="lead">Un simulador con red de 2 switches + router, <b>terminal IOS</b> (con <code>?</code>, Tab y mensajes de error), pruebas de conectividad y <b>7 misiones</b> que se corrigen solas, incluido un reto de red averiada.</p>
-  <p><a href="laboratorio.html" style="display:inline-block;background:var(--v10);color:#fff;padding:10px 22px;border-radius:10px;font-weight:700;text-decoration:none">🧪 Abrir el laboratorio</a></p>
+  <p><a href="laboratorio.html" style="display:inline-block;background:#2563b8;color:#fff;padding:10px 22px;border-radius:10px;font-weight:700;text-decoration:none">🧪 Abrir el laboratorio</a></p>
 </section>
 <section id="test">
   <h2>12 · Test final de VLAN</h2>
